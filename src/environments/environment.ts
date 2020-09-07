@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  urlRaiz: 'https://enovelsoluciones.sharepoint.com',
+  urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Gestion-humana',
+  urlRelativa: '/sites/IntranetAraujo/Gestion-humana',
+  urlWebServ: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios',
+  listaAnticipos: 'Anticipos'
 };
 
 /*
