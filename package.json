@@ -23,6 +23,9 @@
     "@angular/router": "~9.1.7",
     "@pnp/graph": "^2.0.9",
     "@pnp/sp": "^2.0.9",
+    "ngx-bootstrap": "^6.1.0",
+    "ngx-spinner": "^9.0.2",
+    "ngx-toastr": "^13.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
