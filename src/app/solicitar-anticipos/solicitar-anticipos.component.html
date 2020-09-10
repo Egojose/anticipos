@@ -1,1 +1,150 @@
-<p>solicitar-anticipos works!</p>
+<form [formGroup]="form">
+    <div class="container">
+        <mat-card class="shipping-card">
+            <mat-card-header>
+                <mat-card-title>
+                    Datos de solicitud
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Empresa" formControlName="Empresa">
+                                <mat-option *ngFor="let empresa of Empresas" [value]="empresa">
+                                    {{empresa.RazonSocial}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <input matInput placeholder="Empresa" formControlName="Empresa"> -->
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Fecha de solicitud" formControlName="Fecha" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Consecutivo" formControlName="Consecutivo" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Título">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <textarea matInput placeholder="Descripción"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-label>Fecha de finalización</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="fechaFinalizacion">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <span *ngIf="form.controls.fechaFinalizacion.value && form.controls.fechaFinalizacion.value !== ' '" style="color: red" class="alerta">
+                            Se deben legalizar los gastos de anticipos máximo 5 días hábilies después de esta fecha
+                        </span>
+                    </div>
+                </div>
+                <div class=" row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Id compra" formControlName="IdCompra">
+                        </mat-form-field>
+                    </div>
+                    <label for="staticEmail" class="col-sm-2 col-form-label" id="reembolsable">Reembolsable</label>
+                    <div class="col" id="radio">
+                        <mat-radio-group aria-label="Select an option" formControlName="Reembolsable" (change)="mostrarCliente($event.value)">
+                            <mat-radio-button value="true" style="margin-right: 14px;">SI</mat-radio-button>
+                            <mat-radio-button value="false">NO</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error>
+                            <span *ngIf="!form.get('Reembolsable').valid && form.get('Reembolsable').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                        </mat-error>
+                    </div>
+                    <div class="col" *ngIf="mostrarCampos">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Cliente" formControlName="Cliente">
+                        </mat-form-field>
+                    </div>
+                    <div class="col" *ngIf="mostrarCampos">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Job" formControlName="Job">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card">
+            <mat-card-header>
+                <mat-card-title>
+                    Aprobadores
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Director unidad de negocios" formControlName="Director">
+                                <mat-option *ngFor="let aprobador of Aprobadores" [value]="aprobador">
+                                    <b>{{aprobador.Director.Title}}</b> - {{aprobador.Title}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput type="number" placeholder="Porcentaje" formControlName="Porcentaje">
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput type="number" placeholder="CECO" formControlName="Ceco">
+                        </mat-form-field>
+                    </div> -->
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" (click)="AgregarParticipacion()">Agregar</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card" *ngIf="participacion.length > 0">
+            <mat-card-content>
+                <table mat-table [dataSource]="participacion">
+
+                    <ng-container matColumnDef="Director">
+                      <th mat-header-cell *matHeaderCellDef> Director </th>
+                      <td mat-cell *matCellDef="let element"> {{element.Director.Title}} </td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="Ceco">
+                      <th mat-header-cell *matHeaderCellDef> Ceco </th>
+                      <td mat-cell *matCellDef="let element"> {{element.Ceco}} </td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="Porcentaje">
+                      <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
+                      <td mat-cell *matCellDef="let element"> {{element.Porcentaje}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Acciones">
+                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button type="button" class="btn btn-danger">Eliminar</button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                  
+            </mat-card-content>
+        </mat-card>
+    </div>
+</form>

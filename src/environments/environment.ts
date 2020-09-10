@@ -5,10 +5,12 @@
 export const environment = {
   production: false,
   urlRaiz: 'https://enovelsoluciones.sharepoint.com',
-  urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Gestion-humana',
+  urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Servicios',
   urlRelativa: '/sites/IntranetAraujo/Gestion-humana',
   urlWebServ: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios',
-  listaAnticipos: 'Anticipos'
+  listaAnticipos: 'Anticipos',
+  listaEmpresas: 'EmpresasAraujoIbarra',
+  listaUnidades: 'UnidadNegocios',
 };
 
 /*

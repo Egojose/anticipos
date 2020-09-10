@@ -42,6 +42,12 @@ export class ServiciosService {
     return respuesta;
   }
 
+  ConsultarUnidadNegocio() {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaUnidades).items
+    .select('*', 'Director/Title, Director/EMail, Director/ID').expand('Director').getAll();
+    return respuesta;
+  }
+
   GuardarAnticipo(obj) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items.add(obj);
     return respuesta;
@@ -49,9 +55,24 @@ export class ServiciosService {
 
   ConsultarAnticipos(id) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
-    .select('*', 'Responsable/Title, Responsable/ID, Responsable/EMail').expand('Reponsable').filter("ID eq '" + id + "'");
+    .select('*', 'Responsable/Title, Responsable/ID, Responsable/EMail').expand('Reponsable')
+    .filter("ID eq '" + id + "'");
+    return respuesta;
+  }
+
+  ConsultarEmpresas() {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaEmpresas).items.select('*').getAll();
+    return respuesta;
+  }
+
+  ConsultarPendientes(idUsuario) {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
+    .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID').expand('Responsable')
+    .filter("Responsable eq '"+idUsuario+"' and Legalizado eq 0").getAll();
     return respuesta;
   }
 
 
+
 }
+
