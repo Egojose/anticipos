@@ -18,12 +18,22 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from 'ngx-toastr';
+import { NgxCurrencyModule } from "ngx-currency";
+import { MisPendientesComponent } from './mis-pendientes/mis-pendientes.component';
+import { AprobarAnticipoComponent } from './aprobar-anticipo/aprobar-anticipo.component';
+import { ConsultarAnticiposComponent } from './consultar-anticipos/consultar-anticipos.component';
+import { LegalizarAnticipoComponent } from './legalizar-anticipo/legalizar-anticipo.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SolicitarAnticiposComponent
+    SolicitarAnticiposComponent,
+    MisPendientesComponent,
+    AprobarAnticipoComponent,
+    ConsultarAnticiposComponent,
+    LegalizarAnticipoComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +50,9 @@ import { ToastrModule } from 'ngx-toastr';
     NgxSpinnerModule,
     ToastrModule.forRoot(),
     MatRadioModule,
-    MatTableModule
+    MatTableModule,
+    NgxCurrencyModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent],

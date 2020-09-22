@@ -6,11 +6,12 @@
                     Datos de solicitud
                 </mat-card-title>
             </mat-card-header>
+            <hr>
             <mat-card-content>
                 <div class="row">
                     <div class="col">
                         <mat-form-field class="full-width">
-                            <mat-select placeholder="Empresa" formControlName="Empresa">
+                            <mat-select placeholder="Empresa" formControlName="Empresa" (selectionChange)="AsignarConsecutivo($event.value.RazonSocial)">
                                 <mat-option *ngFor="let empresa of Empresas" [value]="empresa">
                                     {{empresa.RazonSocial}}
                                 </mat-option>
@@ -32,12 +33,12 @@
                 <div class="row">
                     <div class="col">
                         <mat-form-field class="full-width">
-                            <input matInput placeholder="Título">
+                            <input matInput placeholder="Título" formControlName="Titulo">
                         </mat-form-field>
                     </div>
                     <div class="col">
                         <mat-form-field class="full-width">
-                            <textarea matInput placeholder="Descripción"></textarea>
+                            <textarea matInput placeholder="Descripción" formControlName="Descripcion"></textarea>
                         </mat-form-field>
                     </div>
                     <div class="col">
@@ -53,10 +54,11 @@
                     </div>
                 </div>
                 <div class=" row">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <input matInput placeholder="Id compra" formControlName="IdCompra">
-                        </mat-form-field>
+                    <div class="col" style="padding-top: 15px;">
+                        <mat-radio-group aria-label="Select an option" formControlName="TipoSolicitud">
+                            <mat-radio-button value="Anticipo">Anticipo</mat-radio-button>
+                            <mat-radio-button value="Reembolso" style="margin-left: 8px;">Reembolso</mat-radio-button>
+                        </mat-radio-group>
                     </div>
                     <label for="staticEmail" class="col-sm-2 col-form-label" id="reembolsable">Reembolsable</label>
                     <div class="col" id="radio">
@@ -87,6 +89,7 @@
                     Aprobadores
                 </mat-card-title>
             </mat-card-header>
+            <hr>
             <mat-card-content>
                 <div class="row">
                     <div class="col">
@@ -114,7 +117,7 @@
                 </div>
             </mat-card-content>
         </mat-card>
-        <mat-card class="shipping-card" *ngIf="participacion.length > 0">
+        <mat-card class="shipping-card" *ngIf="participacion.data.length > 0">
             <mat-card-content>
                 <table mat-table [dataSource]="participacion">
 
@@ -135,8 +138,8 @@
 
                     <ng-container matColumnDef="Acciones">
                         <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                        <td mat-cell *matCellDef="let element">
-                            <button type="button" class="btn btn-danger">Eliminar</button>
+                        <td mat-cell *matCellDef="let element, index as i">
+                            <button type="button" class="btn btn-danger" (click)="EliminarAprobador(i)">Eliminar</button>
                         </td>
                     </ng-container>
 
@@ -144,6 +147,138 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                   </table>
                   
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card">
+            <mat-card-header>
+                <mat-card-title>
+                    Detalle de anticipo
+                </mat-card-title>
+            </mat-card-header>
+            <hr>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Tipo de gasto" formControlName="tipoGasto">
+                                <mat-option *ngFor="let tipo of tipoGasto" [value]="tipo.Title">
+                                    {{tipo.Title}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width"> 
+                            <textarea matInput placeholder="Descricpión" formControlName="DescripcionAnticipo"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput type="number" placeholder="cantidad" formControlName="Cantidad">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Moneda" formControlName="Moneda">
+                                <mat-option value="Peso">
+                                   Peso
+                                </mat-option>
+                                <mat-option value="Dolar">
+                                   Dólar
+                                </mat-option>
+                                <mat-option value="Euro">
+                                   Euro
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Valor unitario" formControlName="ValorUnitario" currencyMask> 
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 offset-4">
+                        <button type="button" class="btn btn-primary btn-block" (click)="AgregarDetalle()">Agregar detalle</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card">
+            <mat-card-content>
+                <table mat-table [dataSource]="detalleAnticipo">
+
+                    <ng-container matColumnDef="Tipo">
+                      <th mat-header-cell *matHeaderCellDef> Tipo de gasto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.tipoGasto}} </td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="Descripcion">
+                      <th mat-header-cell *matHeaderCellDef> Descripción </th>
+                      <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="Cantidad">
+                      <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                      <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Moneda">
+                        <th mat-header-cell *matHeaderCellDef> Moneda </th>
+                        <td mat-cell *matCellDef="let element"> {{element.moneda}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ValorUnitario">
+                        <th mat-header-cell *matHeaderCellDef> Valor unitario </th>
+                        <td mat-cell *matCellDef="let element"> {{element.valorUnitario}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ValorTotal">
+                        <th mat-header-cell *matHeaderCellDef> Valor total </th>
+                        <td mat-cell *matCellDef="let element"> {{element.valorTotal}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Acciones">
+                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                        <td mat-cell *matCellDef="let element, index as i">
+                            <button type="button" class="btn btn-danger" (click)="EliminarDetalle(i)">Eliminar</button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnsDetalle"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnsDetalle;"></tr>
+                  </table>
+                  <br>
+                  <hr>
+                  <div class="row">
+                      <div class="col">
+                        <mat-lablel>Total Pesos</mat-lablel>
+                          <mat-form-field class="full-width">
+                              <input matInput formControlName="totalPesos" currencyMask readonly class="total"> 
+                          </mat-form-field>
+                      </div>
+                      <div class="col">
+                        <mat-lablel>Total Dólares</mat-lablel>
+                        <mat-form-field class="full-width">
+                            <input matInput formControlName="totalDolares" currencyMask readonly class="total"> 
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-lablel>Total Euros</mat-lablel>
+                        <mat-form-field class="full-width">
+                            <input matInput  formControlName="totalEuros" currencyMask readonly class="total"> 
+                        </mat-form-field>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <div class="col-4 offset-4">
+                          <button type="button" class="btn btn-success btn-block" (click)="GuardarAnticipo()">Guardar anticipo</button>
+                      </div>
+                  </div>
             </mat-card-content>
         </mat-card>
     </div>

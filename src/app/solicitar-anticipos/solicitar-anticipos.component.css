@@ -49,3 +49,12 @@ table {
     margin-right: 0px;
     /* margin-right: -60px; */
 }
+
+.total {
+    background-color: lightgray;
+}
+
+mat-card-header {
+    background:rgba(34, 49, 63, .9);
+    color: white;
+   }

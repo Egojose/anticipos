@@ -6,11 +6,15 @@ export const environment = {
   production: false,
   urlRaiz: 'https://enovelsoluciones.sharepoint.com',
   urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Servicios',
+  urlGH: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Gestion-humana',
   urlRelativa: '/sites/IntranetAraujo/Gestion-humana',
   urlWebServ: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios',
   listaAnticipos: 'Anticipos',
   listaEmpresas: 'EmpresasAraujoIbarra',
   listaUnidades: 'UnidadNegocios',
+  listaTipoGasto: 'TipoGasto',
+  listaConfiguarcion: 'ConfiguracionAplicaciones',
+  listaEmpleados: 'EmpleadosNueva'
 };
 
 /*
