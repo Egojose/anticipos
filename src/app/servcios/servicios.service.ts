@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { sp } from "@pnp/sp/presets/all";
+import { sp, Item } from "@pnp/sp/presets/all";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -15,6 +15,16 @@ export class ServiciosService {
         "Accept": "application/json; odata=verbose"
       }
     }, environment.urlWeb)
+
+    return configuracionSharepoint;
+  }
+
+  ConfiguracionGH() {
+    const configuracionSharepoint = sp.configure({
+      headers: {
+        "Accept": "application/json; odata=verbose"
+      }
+    }, environment.urlGH)
 
     return configuracionSharepoint;
   }
@@ -48,6 +58,24 @@ export class ServiciosService {
     return respuesta;
   }
 
+  ConsultarTipoGasto() {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaTipoGasto).items
+    .select('*').getAll();
+    return respuesta; 
+  }
+
+  ConsultarConsecutivo() {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaConfiguarcion).items
+    .select('*').filter("NombreServicio eq 'Solicitud de anticipo'").getAll();
+    return respuesta;
+  }
+
+  ActualizarConsecutivo(id, obj) {
+    let respuesta = this.Configuracion().web.lists
+    .getByTitle(environment.listaConfiguarcion).items.getById(id).update(obj);
+    return respuesta;
+  }
+
   GuardarAnticipo(obj) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items.add(obj);
     return respuesta;
@@ -67,8 +95,14 @@ export class ServiciosService {
 
   ConsultarPendientes(idUsuario) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
-    .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID').expand('Responsable')
+    .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID', 'Solicitante/Title, Solicitante/EMail, Solicitante/ID').expand('Responsable, Solicitante')
     .filter("Responsable eq '"+idUsuario+"' and Legalizado eq 0").getAll();
+    return respuesta;
+  }
+
+  ConsultarUsuarioEmpleados(id: number) {
+    let respuesta = this.ConfiguracionGH().web.lists.getByTitle(environment.listaEmpleados).items
+    .select('*').filter("usuarioId eq '"+ id +"'").getAll();
     return respuesta;
   }
 
