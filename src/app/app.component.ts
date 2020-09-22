@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   title = 'anticipos-araujo';
   usuarioActual;
   pendientes = [];
+  firma;
 
   constructor(public Servicios: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService) {}
 
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
       async (respuesta) => {
         this.usuarioActual = respuesta;
         console.log(this.usuarioActual);
-        await this.ObtnenerAnticiposPendientes()
+        await this.ObtnenerAnticiposPendientes();
+        await this.ObtenerEmpleado(this.usuarioActual.Id);
         this.spinner.hide();
       }
     ).catch(
@@ -46,12 +48,21 @@ export class AppComponent implements OnInit {
     )
   };
 
+  async ObtenerEmpleado(id: number) {
+    await this.Servicios.ConsultarUsuarioEmpleados(id).then(
+      (respuesta) => {
+        if(respuesta[0].UrlFirma) this.firma = respuesta[0].UrlFirma.Url;
+      }
+    )
+  }
+
   enviarDatos() {
     let datos = {
       usuario: {
         Id: this.usuarioActual.Id,
         Title: this.usuarioActual.Title,
-        Email: this.usuarioActual.Email
+        Email: this.usuarioActual.Email,
+        Firma: this.firma
       },
       pendientes: this.pendientes
     }
