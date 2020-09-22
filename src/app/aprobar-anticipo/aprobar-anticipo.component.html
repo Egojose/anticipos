@@ -1,0 +1,108 @@
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Información general
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <div class="row" *ngFor="let item of pendienteArr">
+            <div class="col">
+                <ul>
+                    <li>Solicitante: <b>{{item.Solicitante.Title}}</b></li>
+                    <hr>
+                    <li>Título: <b>{{item.Title}}</b></li>
+                    <hr>
+                    <li>Descripción: <b>{{item.Descripcion}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Consecutivo: <b>{{item.Consecutivo}}</b></li>
+                    <hr>
+                    <li>Reembolsable: <b>{{item.Reembolsable == true ? 'Sí' : 'No'}}</b></li>
+                    <hr>
+                    <li>Tipo de solicitud: <b>{{item.TipoSolicitud}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Id compra asociada: <b>{{item.IdCompraAsociada}}</b></li>
+                    <hr>
+                    <li>Cliente: <b>{{item.Cliente}}</b></li>
+                    <hr>
+                    <li>Job: <b>{{item.Job}}</b></li>
+                </ul>
+            </div>
+            <hr>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Detalle de anticipo
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <table mat-table [dataSource]="detalleAnticipo">
+
+            <ng-container matColumnDef="Tipo">
+              <th mat-header-cell *matHeaderCellDef> Tipo de gasto </th>
+              <td mat-cell *matCellDef="let element"> {{element.tipoGasto}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Descripcion">
+              <th mat-header-cell *matHeaderCellDef> Descripción </th>
+              <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Cantidad">
+              <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+              <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Moneda">
+                <th mat-header-cell *matHeaderCellDef> Moneda </th>
+                <td mat-cell *matCellDef="let element"> {{element.moneda}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ValorUnitario">
+                <th mat-header-cell *matHeaderCellDef> Valor unitario </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorUnitario | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ValorTotal">
+                <th mat-header-cell *matHeaderCellDef> Valor total </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsDetalle"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsDetalle;"></tr>
+          </table>
+        <br>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <mat-lablel>Total Pesos</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalPesos" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel>Total Dólares</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput  [(ngModel)]="totalDolares" currencyMask readonly
+                        class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel>Total Euros</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalEuros" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
