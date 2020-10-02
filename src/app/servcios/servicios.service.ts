@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { sp, Item } from "@pnp/sp/presets/all";
+import { sp, IEmailProperties } from "@pnp/sp/presets/all";
 import { environment } from "src/environments/environment";
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,16 @@ export class ServiciosService {
         "Accept": "application/json; odata=verbose"
       }
     }, environment.urlGH)
+
+    return configuracionSharepoint;
+  }
+
+  ConfiguracionJobs() {
+    const configuracionSharepoint = sp.configure({
+      headers: {
+        "Accept": "application/json; odata=verbose"
+      }
+    }, environment.urlJobs)
 
     return configuracionSharepoint;
   }
@@ -70,6 +81,12 @@ export class ServiciosService {
     return respuesta;
   }
 
+  ConsultarClientes() {
+    let respuesta = this.ConfiguracionJobs().web.lists.getByTitle(environment.listaProyectos).items
+    .select('*', 'Cliente/NombreCliente').expand('Cliente').getAll();
+    return respuesta;
+  }
+
   ActualizarConsecutivo(id, obj) {
     let respuesta = this.Configuracion().web.lists
     .getByTitle(environment.listaConfiguarcion).items.getById(id).update(obj);
@@ -106,7 +123,34 @@ export class ServiciosService {
     return respuesta;
   }
 
+  ConsultarAprobadores() {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAprobadores)
+    .items.select('*',
+      'GerenteAdministrativo/Title, GerenteAdministrativo/EMail, GerenteAdministrativo/ID',
+      'Tesorero/Title, Tesorero/EMail, Tesorero/ID',
+      'Contador/Title, Contador/EMail, Contador/ID'
+    )
+    .expand('GerenteAdministrativo, Tesorero, Contador').getAll();
+    return respuesta;
+  }
 
+  EnviarCorreo(ObjEmail: IEmailProperties) {
+    const respuesta = this.Configuracion().utility.sendEmail(ObjEmail);
+    return respuesta;
+  }
+
+  ActualizarAnticipo(id: number, obj: object) {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
+    .getById(id).update(obj);
+    return respuesta;
+  }
+
+  async AgregarDocumentos(biblioteca, nombre, archivo: File): Promise<any> {
+    const respuesta = await this.Configuracion()
+      .web.getFolderByServerRelativeUrl(biblioteca)
+      .files.add(nombre, archivo);
+    return respuesta;
+  }
 
 }
 
