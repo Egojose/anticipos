@@ -1,1 +1,403 @@
-<p>legalizar-anticipo works!</p>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Información general
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <div class="row" *ngFor="let item of pendienteArr">
+            <div class="col">
+                <ul>
+                    <li>Título: <b>{{item.Title}}</b></li>
+                    <hr>
+                    <li>Consecutivo: <b>{{item.Consecutivo}}</b></li>
+                    <hr>
+                    <li>Solicitante: <b>{{item.Solicitante.Title}}</b></li>
+                    <hr>
+                    <li>Empresa: <b>{{item.Empresa}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Tipo de solicitud: <b>{{item.TipoSolicitud}}</b></li>
+                    <hr>
+                    <li>Reembolsable: <b>{{item.Reembolsable == true ? 'Sí' : 'No'}}</b></li>
+                    <hr>
+                    <li>Cliente: <b>{{item.Cliente}}</b></li>
+                    <hr>
+                    <li>Job: <b>{{item.Job}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Fecha de Solicitud: <b>{{item.Created | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                    <li>Fecha de aprobación: <b>{{item.FechaAprobacion | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                    <li>Fecha de finalización: <b>{{item.FechaFinalizacion | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                </ul>
+            </div>
+            <hr>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Unidades de negocio
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="detalleUnidades">
+            <ng-container matColumnDef="Director">
+                <th mat-header-cell *matHeaderCellDef> Director </th>
+                <td mat-cell *matCellDef="let element"> {{element.Director.Title}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Ceco">
+                <th mat-header-cell *matHeaderCellDef> Ceco </th>
+                <td mat-cell *matCellDef="let element"> {{element.Ceco}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Porcentaje">
+                <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
+                <td mat-cell *matCellDef="let element"> {{element.Porcentaje}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedUnidades"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedUnidades;"></tr>
+
+        </table>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Detalle de anticipo
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <table mat-table [dataSource]="detalleAnticipo">
+
+            <ng-container matColumnDef="Tipo">
+              <th mat-header-cell *matHeaderCellDef> Tipo de gasto </th>
+              <td mat-cell *matCellDef="let element"> {{element.tipoGasto}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Descripcion">
+              <th mat-header-cell *matHeaderCellDef> Descripción </th>
+              <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Cantidad">
+              <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+              <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Moneda">
+                <th mat-header-cell *matHeaderCellDef> Moneda </th>
+                <td mat-cell *matCellDef="let element"> {{element.moneda}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ValorTotal">
+                <th mat-header-cell *matHeaderCellDef> Valor total </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsDetalle"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsDetalle;"></tr>
+          </table>
+        <br>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <mat-lablel>Total Pesos</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalPesos" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel>Total Dólares</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput  [(ngModel)]="totalDolares" currencyMask readonly
+                        class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel>Total Euros</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalEuros" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Detalle de legalización
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-select placeholder="Tipo de gasto" (selectionChange)="mostrarCamposTransporte($event.value)" [(ngModel)]="tipoDeGasto">
+                        <mat-option *ngFor="let tipo of tipoGasto" [value]="tipo.Title">
+                            {{tipo.Title}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <textarea matInput rows="1" placeholder="Descripción del gasto" [(ngModel)]="descripcion"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Beneficiario" [(ngModel)]="beneficiario">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Valor total" currencyMask [(ngModel)]="valorTotal">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-select placeholder="Moneda" [(ngModel)]="moneda">
+                        <mat-option value="Peso">
+                           Peso
+                        </mat-option>
+                        <mat-option value="Dolar">
+                           Dólar
+                        </mat-option>
+                        <mat-option value="Euro">
+                           Euro
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row" *ngIf="camposTransporte">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Origen" [(ngModel)]="origen">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Destino" [(ngModel)]="destino">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha de inicio</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaInicio">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha de finalización</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="fechaFin">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-6 offset-3">
+                <button type="button" class="btn btn-primary btn-block" (click)="AgregarDetalle()">Agregar detalle</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card" *ngIf="detalle.data.length > 0">
+    <mat-card-header>
+
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="detalle">
+
+            <ng-container matColumnDef="Tipo">
+              <th mat-header-cell *matHeaderCellDef> Tipo de gasto </th>
+              <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Descripcion">
+              <th mat-header-cell *matHeaderCellDef> Descripción </th>
+              <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Beneficiario">
+              <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
+              <td mat-cell *matCellDef="let element"> {{element.beneficiario}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Moneda">
+                <th mat-header-cell *matHeaderCellDef> Moneda </th>
+                <td mat-cell *matCellDef="let element"> {{element.moneda}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ValorTotal">
+                <th mat-header-cell *matHeaderCellDef> Valor total </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Origen">
+                <th mat-header-cell *matHeaderCellDef> Origen </th>
+                <td mat-cell *matCellDef="let element"> {{element.origen}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Destino">
+                <th mat-header-cell *matHeaderCellDef> Destino </th>
+                <td mat-cell *matCellDef="let element"> {{element.destino}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="FechaInicio">
+                <th mat-header-cell *matHeaderCellDef> Fecha de inicio </th>
+                <td mat-cell *matCellDef="let element">
+                    <ng-container *ngIf="element.fechaInicio === 'N/A'">
+                        N/A
+                    </ng-container>
+                    <ng-container *ngIf="element.fechaInicio !== 'N/A'">
+                        {{element.fechaInicio | date: 'dd/MM/yyyy'}}
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="FechaFin">
+                <th mat-header-cell *matHeaderCellDef> Fecha de finalización </th>
+                <td mat-cell *matCellDef="let element">
+                    <ng-container *ngIf="element.fechaInicio === 'N/A'">
+                        N/A
+                    </ng-container>
+                    <ng-container *ngIf="element.fechaFin !== 'N/A'">
+                        {{element.fechaFin | date: 'dd/MM/yyyy'}}
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Acciones">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let element, index as i">
+                    <button type="button" class="btn btn-danger" (click)="Eliminar(i)">Eliminar</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsLegalizacion"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsLegalizacion;"></tr>
+          </table>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card" *ngIf="detalle.data.length > 0">
+    <mat-card-header>
+        <mat-card-title>
+            Resumen de cuentas
+        </mat-card-title>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-lablel>Total anticipo Pesos</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalPesos" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel>Total anticipo Dólares</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput  [(ngModel)]="totalDolares" currencyMask readonly
+                        class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel>Total anticipo Euros</mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalEuros" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+        </div>
+        <table mat-table [dataSource]="resumen" class="resumen">
+            <ng-container matColumnDef="Detalle">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Concepto">
+                <th mat-header-cell *matHeaderCellDef> Concepto </th>
+                <td mat-cell *matCellDef="let element"> {{element.concepto}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Pesos">
+                <th mat-header-cell *matHeaderCellDef> Pesos </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'rojo': element.tipo === 'Saldo' && element.Peso < 0 }"> {{element.Peso | currency}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Dolares">
+                <th mat-header-cell *matHeaderCellDef> Dólares </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'rojo': element.tipo === 'Saldo' && element.Dolar < 0 }"> {{element.Dolar | currency}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Euros">
+                <th mat-header-cell *matHeaderCellDef> Euros </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'rojo': element.tipo === 'Saldo' && element.Euro < 0 }"> {{element.Euro | currency}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedResumen"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedResumen;"></tr>
+
+        </table>
+        <br>
+        <div class="row">
+            <div class="col">
+                <mat-label>Saldo en pesos a favor de</mat-label>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="saldoPesosAfavor" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-label>Saldo en dólares a favor de</mat-label>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="saldoDolarAfavor" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-label>Saldo en euros a favor de</mat-label>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="saldoEurosAfavor" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card-content>
+    <div class="row">
+        <div class="col">
+            <label for="">Cargar Facturas</label>
+            <input type="file" (change)="AdjuntarSoporte($event)">
+            <span *ngIf="alertarExtension"  style="color: red" class="alerta">
+               formatos permitidos: jpg, pdf, eml, doc, docx
+            </span>
+        </div>
+    </div>
+</mat-card-content>
+<div class="row">
+    <div class="col-6">
+        <button type="button" class="btn btn-success btn-block" (click)="Enviar()">Enviar para aprobación</button>
+    </div>
+    <div class="col-6">
+        <button type="button" class="btn btn-primary btn-block" (click)="GuardadoParcial()">Guardar para mas tarde</button>
+    </div>
+</div>
