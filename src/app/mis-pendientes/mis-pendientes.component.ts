@@ -12,27 +12,37 @@ export class MisPendientesComponent implements OnInit {
   pendientes;
   pendientesJson = []
   usuario = [];
+  gerente = [];
 
   constructor(public router: Router) { }
 
   ngOnInit(): void {
+    if(!sessionStorage.getItem('datosUsuario')) {
+      this.router.navigate(['/home']);
+      return;
+    }
    this.misPendientes = sessionStorage.getItem('datosUsuario')
    this.pendientes = JSON.parse(this.misPendientes);
    this.pendientesJson = this.pendientes.pendientes
    this.usuario.push(this.pendientes.usuario);
+   this.gerente.push(this.pendientes.gerente);
    console.log(this.pendientesJson);
    console.log(this.usuario);
   }
 
   Navegar(element) {
+    this.pendientes.usuario.Firma = this.usuario[0].Firma
     let el = {
       pendiente: element,
-      firma: this.usuario[0].Firma
+      usuario: this.pendientes.usuario,
+      gerente: this.gerente
     }
     this.EnviarElemento(el)
-    element.Estado === 'Por aprobar' && this.router.navigate(['/aprobar-anticipo']);
-    element.Estado === 'Por legalizar' && alert('Por legalizar');
-    element.Estado === 'Por desembolsar' && alert('Por desembolsar');
+    if(element.Estado === 'Por aprobar' || element.Estado === 'Por aprobar gerente administrativo') this.router.navigate(['/aprobar-anticipo']);
+    element.Estado === 'Por desembolsar' && this.router.navigate(['/desembolsar-anticipo']);
+    element.Estado === 'Por legalizar' && this.router.navigate(['/legalizar-anticipo']);
+    (element.Estado === 'Guardado parcial' || element.Estado === 'Rechazado') && this.router.navigate(['/editar-legalizacion']);
+    element.Estado === 'Por aprobar legalización' && this.router.navigate(['/aprobar-legalizacion']);
   }
 
   EnviarElemento(element) {
