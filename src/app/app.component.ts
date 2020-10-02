@@ -13,11 +13,16 @@ export class AppComponent implements OnInit {
   usuarioActual;
   pendientes = [];
   firma;
+  firmaGerente;
+  gerenteAdmin;
+  errores = 0
 
   constructor(public Servicios: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService) {}
 
   ngOnInit() {
+    sessionStorage.clear();
     this.ObtenerUsuarioActual();
+    this.ObtenerAprobadores();
   };
 
   ObtenerUsuarioActual() {
@@ -34,6 +39,7 @@ export class AppComponent implements OnInit {
       (err) => {
         this.mostrarError('No se pudo cargar el usuario actual. Por favor intente hacer su solicitud más tarde');
         console.log('error cargando usuario' + err);
+        this.errores++
         this.spinner.hide();
       }
     )
@@ -45,6 +51,13 @@ export class AppComponent implements OnInit {
         this.pendientes = respuesta;
         console.log(this.pendientes)
       }
+    ).catch(
+      (err) => {
+        this.mostrarError('No se pudieron cargar los anticipos pendientes');
+        console.error(`Pendientes ${err}`);
+        this.errores++
+        this.spinner.hide();
+      }
     )
   };
 
@@ -53,18 +66,68 @@ export class AppComponent implements OnInit {
       (respuesta) => {
         if(respuesta[0].UrlFirma) this.firma = respuesta[0].UrlFirma.Url;
       }
+    ).catch(
+      (err) => {
+        this.mostrarError('No se pudo cargar la información del empleado');
+        console.error(`Empleado ${err}`);
+        this.errores++
+        this.spinner.hide();
+      }
+    )
+  }
+
+  async ObtenerAprobadores() {
+    await this.Servicios.ConsultarAprobadores().then(
+      async (respuesta) => {
+        await this.ObtenerFirmaGerente(respuesta[0].GerenteAdministrativo.ID);
+        this.gerenteAdmin = {
+          Title: respuesta[0].GerenteAdministrativo.Title,
+          ID: respuesta[0].GerenteAdministrativo.ID,
+          EMail: respuesta[0].GerenteAdministrativo.EMail,
+          // Firma: this.firmaGerente,
+        }
+        console.log(this.gerenteAdmin);
+      }
+    ).catch(
+      (err) => {
+        this.mostrarError('No se pudo cargar el aprobador');
+        console.error(`Aprobador ${err}`);
+        this.errores++
+        this.spinner.hide();
+      }
+    )
+  }
+
+  async ObtenerFirmaGerente(id: number) {
+    await this.Servicios.ConsultarUsuarioEmpleados(id).then(
+      (respuesta) => {
+        if(respuesta[0].UrlFirma) this.firmaGerente = respuesta[0].UrlFirma.Url;
+        console.log(this.firmaGerente);
+      }
+    ).catch(
+      (err) => {
+        this.mostrarError('No se pudo cargar la información del gerente');
+        console.log(`Firma gerente ${err}`);
+        this.errores++
+        this.spinner.hide();
+      }
     )
   }
 
   enviarDatos() {
+    if(this.errores > 0) {
+      this.mostrarAdvertencia('La solicitud no se pude procesar debido a que algunos elementos no se cargaron correctamente. Contacte al administrador');
+      return false
+    }
     let datos = {
+      pendientes: this.pendientes,
+      gerente: this.gerenteAdmin,
       usuario: {
         Id: this.usuarioActual.Id,
         Title: this.usuarioActual.Title,
-        Email: this.usuarioActual.Email,
+        EMail: this.usuarioActual.Email,
         Firma: this.firma
-      },
-      pendientes: this.pendientes
+      }
     }
     sessionStorage.setItem('datosUsuario', JSON.stringify(datos))
   }

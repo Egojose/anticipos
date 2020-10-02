@@ -154,6 +154,10 @@ li .nav-item :hover {
     background: rgba(36, 37, 42, 1)
 }
 
+ul li {
+    cursor: pointer;
+}
+
 img {
     width: 25px;
     height: 25px;

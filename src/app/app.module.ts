@@ -23,6 +23,9 @@ import { MisPendientesComponent } from './mis-pendientes/mis-pendientes.componen
 import { AprobarAnticipoComponent } from './aprobar-anticipo/aprobar-anticipo.component';
 import { ConsultarAnticiposComponent } from './consultar-anticipos/consultar-anticipos.component';
 import { LegalizarAnticipoComponent } from './legalizar-anticipo/legalizar-anticipo.component';
+import { DesembolsarAnticipoComponent } from './desembolsar-anticipo/desembolsar-anticipo.component';
+import { EditarLegalizacionComponent } from './editar-legalizacion/editar-legalizacion.component';
+import { AprobarLegalizacionComponent } from './aprobar-legalizacion/aprobar-legalizacion.component';
 
 
 
@@ -33,7 +36,10 @@ import { LegalizarAnticipoComponent } from './legalizar-anticipo/legalizar-antic
     MisPendientesComponent,
     AprobarAnticipoComponent,
     ConsultarAnticiposComponent,
-    LegalizarAnticipoComponent
+    LegalizarAnticipoComponent,
+    DesembolsarAnticipoComponent,
+    EditarLegalizacionComponent,
+    AprobarLegalizacionComponent
   ],
   imports: [
     BrowserModule,
