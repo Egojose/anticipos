@@ -1,0 +1,135 @@
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Información general
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <div class="row" *ngFor="let item of anticipo">
+            <div class="col">
+                <ul>
+                    <li>Solicitante: <b>{{item.Solicitante.Title}}</b></li>
+                    <hr>
+                    <li>Título: <b>{{item.Title}}</b></li>
+                    <hr>
+                    <li>Descripción: <b>{{item.Descripcion}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Consecutivo: <b>{{item.Consecutivo}}</b></li>
+                    <hr>
+                    <li>Reembolsable: <b>{{item.Reembolsable == true ? 'Sí' : 'No'}}</b></li>
+                    <hr>
+                    <li>Tipo de solicitud: <b>{{item.TipoSolicitud}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Fecha de Solicitud: <b>{{item.Created | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                    <li>Fecha de aprobación: <b>{{item.FechaAprobacion | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                    <li>Fecha de finalización: <b>{{item.FechaFinalizacion | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                </ul>
+            </div>
+            <hr>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-lablel><b>Total Pesos</b></mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalPesos" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel><b>Total Dólares</b></mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput  [(ngModel)]="totalDolares" currencyMask readonly
+                        class="total">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-lablel><b>Total Euros</b></mat-lablel>
+                <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="totalEuros" currencyMask readonly class="total">
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Detalle de desembolso
+        </mat-card-title>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-label style="vertical-align: middle; display: inline-block">Forma de pago</mat-label>
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="FormaPago">
+                    <mat-radio-button value="Transferencia">Transferencia</mat-radio-button>
+                    <mat-radio-button value="Efectivo">Efectivo</mat-radio-button>
+                    <mat-radio-button value="Cheque">Cheque</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Entidad" [(ngModel)]="Entidad">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Número de transacción" [(ngModel)]="numeroTransaccion">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Solicitante" [(ngModel)]="solicitante" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha de entrega</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaEntrega">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <!-- <span *ngIf="form.controls.fechaFinalizacion.value && form.controls.fechaFinalizacion.value !== ' '" style="color: red" class="alerta">
+                    Se deben legalizar los gastos de anticipos máximo 5 días hábilies después de esta fecha
+                </span> -->
+            </div>
+            <div class="col">
+                <label for="">Cargar soporte</label>
+                <input type="file" (change)="AdjuntarSoporte($event)">
+                <span *ngIf="alertarExtension"  style="color: red" class="alerta">
+                   formatos permitidos: jpg, pdf, eml, doc, docx
+                </span>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <textarea matInput rows="1" placeholder="Comentarios" [(ngModel)]="Comentarios"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-6 offset-3">
+                <button type="button" class="btn btn-success btn-block" (click)="AgregarDetalle()">Guardar</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
