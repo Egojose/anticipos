@@ -41,6 +41,35 @@
 <mat-card class="shipping-card">
     <mat-card-header>
         <mat-card-title>
+            Unidades de negocio
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="detalleUnidades">
+            <ng-container matColumnDef="Director">
+                <th mat-header-cell *matHeaderCellDef> Director </th>
+                <td mat-cell *matCellDef="let element"> {{element.Director.Title}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Ceco">
+                <th mat-header-cell *matHeaderCellDef> Ceco </th>
+                <td mat-cell *matCellDef="let element"> {{element.Ceco}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Porcentaje">
+                <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
+                <td mat-cell *matCellDef="let element"> {{element.Porcentaje}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedUnidades"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedUnidades;"></tr>
+
+        </table>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
             Detalle de anticipo
         </mat-card-title>
     </mat-card-header>
@@ -48,7 +77,7 @@
     <mat-card-content>
         <table mat-table [dataSource]="detalleAnticipo">
 
-            <ng-container matColumnDef="Tipo">
+            <ng-container matColumnDef="TipoGasto">
               <th mat-header-cell *matHeaderCellDef> Tipo de gasto </th>
               <td mat-cell *matCellDef="let element"> {{element.tipoGasto}} </td>
             </ng-container>
@@ -78,8 +107,8 @@
                 <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency}} </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="columnsDetalle"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnsDetalle;"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
         <br>
         <hr>
@@ -104,5 +133,52 @@
                 </mat-form-field>
             </div>
         </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Aprobar
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="aprobadores">
+
+            <ng-container matColumnDef="Nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element">
+                    <span><b>{{element.Director.Title}}</b></span><br>
+                    <span>{{element.fecha}}</span>
+                </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Firma">
+              <th mat-header-cell *matHeaderCellDef> Firma </th>
+              <td mat-cell *matCellDef="let element">
+                   <img src="{{element.Director.Firma}}" alt="" id="firma" style="width: 200px;">
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Rol">
+                <th mat-header-cell *matHeaderCellDef> Rol </th>
+                <td mat-cell *matCellDef="let element">{{element.rol}}</td>
+              </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsAprobadores"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsAprobadores;"></tr>
+          </table>
+          <div class="row" *ngIf="!ocultarBtn">
+              <div class="col-6 offset-3">
+                  <button type="button" class="btn btn-success btn-block" (click)="Aprobar()" [disabled]="ocultarBtn">Aprobar</button>
+              </div>
+          </div>
+          <div class="row" *ngIf="ocultarBtn">
+              <div class="col-6">
+                  <button type="button" class="btn btn-success btn-block" (click)="ActualizarSolicitud()">Enviar</button>
+              </div>
+              <div class="col-6">
+                  <button type="button" class="btn btn-danger btn-block" (click)="cancelar()">Cancelar</button>
+              </div>
+          </div>
     </mat-card-content>
 </mat-card>
