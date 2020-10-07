@@ -299,17 +299,17 @@
         <div class="row">
             <div class="col">
                 <mat-form-field class="full-width">
-                    <textarea matInput rows="2" placeholder="Observaciones" [(ngModel)]="Observaciones"></textarea>
+                    <textarea matInput rows="2" placeholder="Observaciones" [(ngModel)]="Observaciones" [readonly]="!mostrarElementos"></textarea>
                 </mat-form-field>
             </div>
-            <div class="col">
+            <div class="col" *ngIf="mostrarElementos">
                 <label for="">Cargar facturas</label><br>
                 <input type="file">
             </div>
         </div>
     </mat-card-content>
 </mat-card>
-<div class="row">
+<div class="row" *ngIf="mostrarElementos">
     <div class="col-6">
         <button type="button" class="btn btn-success btn-block" >Aprobar</button>
     </div>

@@ -45,6 +45,7 @@ export class AprobarLegalizacionComponent implements OnInit {
   detalleItemsLegalizacion: { detalle: any[]; resumen: any[]; saldoAfavor: { Peso: string; Dolar: string; Euro: string; }; };
   arrayDetalleLegalizacion = [];
   Observaciones: string;
+  mostrarElementos = true
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -57,6 +58,7 @@ export class AprobarLegalizacionComponent implements OnInit {
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
     console.log(this.pendienteArr);
+    if(this.pendiente.query) this.mostrarElementos = false;
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     let arrDetalle = JSON.parse(this.pendienteArr[0].DetalleLegalizacion);
@@ -156,7 +158,8 @@ export class AprobarLegalizacionComponent implements OnInit {
       Estado,
       ResponsableId,
       Legalizado,
-      ComentariosContador
+      ComentariosContador,
+      FechaLegalizacion: new Date()
     }
 
     this.Servicio.ActualizarAnticipo(id, obj).then(
