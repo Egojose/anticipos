@@ -140,6 +140,11 @@
                       <th mat-header-cell *matHeaderCellDef> Ceco </th>
                       <td mat-cell *matCellDef="let element"> {{element.Ceco}} </td>
                     </ng-container>
+
+                    <ng-container matColumnDef="Unidad">
+                        <th mat-header-cell *matHeaderCellDef> Unidad de negocio </th>
+                        <td mat-cell *matCellDef="let element"> {{element.UnidadNegocio}} </td>
+                      </ng-container>
                   
                     <ng-container matColumnDef="Porcentaje">
                       <th mat-header-cell *matHeaderCellDef> Porcentaje </th>

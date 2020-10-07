@@ -105,6 +105,19 @@ export class ServiciosService {
     return respuesta;
   }
 
+  // ConsultarTodosAnticipos(fitlerString) {
+  //   let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
+  //   .select('*', 'Solicitante/Title, Solicitante/EMail, Solicitante/Id').expand('Solicitante')
+  //   .filter(fitlerString).getAll();
+  //   return respuesta;
+  // }
+
+  ConsultarTodosAnticipos() {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
+    .select('*', 'Solicitante/Title, Solicitante/EMail, Solicitante/Id').expand('Solicitante').getAll();
+    return respuesta;
+  }
+
   ConsultarEmpresas() {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaEmpresas).items.select('*').getAll();
     return respuesta;
@@ -120,6 +133,12 @@ export class ServiciosService {
   ConsultarUsuarioEmpleados(id: number) {
     let respuesta = this.ConfiguracionGH().web.lists.getByTitle(environment.listaEmpleados).items
     .select('*').filter("usuarioId eq '"+ id +"'").getAll();
+    return respuesta;
+  }
+
+  ConsultarEmpleados() {
+    let respuesta = this.ConfiguracionGH().web.lists.getByTitle(environment.listaEmpleados).items
+    .select('*', 'usuario/Title, usuario/Id').expand('usuario').getAll();
     return respuesta;
   }
 

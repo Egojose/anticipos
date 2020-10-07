@@ -14,7 +14,7 @@ import { IEmailProperties } from "@pnp/sp/presets/all";
 })
 export class SolicitarAnticiposComponent implements OnInit {
 
-  displayedColumns: string[] = ['Director', 'Ceco', 'Porcentaje', 'Acciones'];
+  displayedColumns: string[] = ['Director', 'Ceco', 'Unidad', 'Porcentaje', 'Acciones'];
   columnsDetalle: string[] = ['Tipo', 'Descripcion', 'Cantidad', 'Moneda', 'ValorUnitario', 'ValorTotal', 'Acciones']
   form: FormGroup;
   fecha = new Date();
@@ -46,7 +46,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     }
     this.datosString = sessionStorage.getItem('datosUsuario');
     this.datosJson = JSON.parse(this.datosString);
-    console.log(this.datosJson);
+    console.log(this.datosJson.usuario);
     this.form = this.fb.group({
       Titulo: ['', Validators.required],
       Descripcion: ['', Validators.required],
@@ -183,6 +183,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     let aprobador = {
       Director: this.form.controls.Director.value.Director,
       Ceco: this.form.controls.Director.value.Ceco,
+      UnidadNegocio: this.form.controls.Director.value.Title,
       Porcentaje: +this.form.controls.Porcentaje.value,
       aprobado: false,
       rol: 'Director unidad de negocio'
@@ -330,6 +331,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     let TipoSolicitud = this.form.controls.TipoSolicitud.value;
     let Aprobadores = JSON.stringify(this.usuariosAprobadores);
     let FechaFinalizacion = this.form.controls.fechaFinalizacion.value;
+    let FirmaSolicitante = this.datosJson.usuario.Firma
 
     let obj = {
       Title,
@@ -345,7 +347,8 @@ export class SolicitarAnticiposComponent implements OnInit {
       Estado,
       TipoSolicitud,
       Aprobadores,
-      FechaFinalizacion
+      FechaFinalizacion,
+      FirmaSolicitante
     }
 
     let objConsecutivo = {}
