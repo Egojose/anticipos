@@ -27,6 +27,8 @@
     "ngx-currency": "^2.5.1",
     "ngx-spinner": "^9.0.2",
     "ngx-toastr": "^13.0.0",
+    "pdfmake": "^0.1.68",
+    "pdfmake-wrapper": "^2.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
