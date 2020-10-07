@@ -26,6 +26,8 @@ import { LegalizarAnticipoComponent } from './legalizar-anticipo/legalizar-antic
 import { DesembolsarAnticipoComponent } from './desembolsar-anticipo/desembolsar-anticipo.component';
 import { EditarLegalizacionComponent } from './editar-legalizacion/editar-legalizacion.component';
 import { AprobarLegalizacionComponent } from './aprobar-legalizacion/aprobar-legalizacion.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import {MatIconModule} from '@angular/material/icon'
 
 
 
@@ -57,7 +59,9 @@ import { AprobarLegalizacionComponent } from './aprobar-legalizacion/aprobar-leg
     ToastrModule.forRoot(),
     MatRadioModule,
     MatTableModule,
-    NgxCurrencyModule
+    NgxCurrencyModule,
+    ModalModule.forRoot(),
+    MatIconModule
     
   ],
   providers: [],
