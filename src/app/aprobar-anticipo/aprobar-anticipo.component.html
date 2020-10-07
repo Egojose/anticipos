@@ -167,12 +167,12 @@
             <tr mat-header-row *matHeaderRowDef="columnsAprobadores"></tr>
             <tr mat-row *matRowDef="let row; columns: columnsAprobadores;"></tr>
           </table>
-          <div class="row" *ngIf="!ocultarBtn">
+          <div class="row" *ngIf="!ocultarBtn && mostrarBtn">
               <div class="col-6 offset-3">
                   <button type="button" class="btn btn-success btn-block" (click)="Aprobar()" [disabled]="ocultarBtn">Aprobar</button>
               </div>
           </div>
-          <div class="row" *ngIf="ocultarBtn">
+          <div class="row" *ngIf="ocultarBtn && mostrarBtn">
               <div class="col-6">
                   <button type="button" class="btn btn-success btn-block" (click)="ActualizarSolicitud()">Enviar</button>
               </div>
