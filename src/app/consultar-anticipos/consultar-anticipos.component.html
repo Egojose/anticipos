@@ -1,1 +1,207 @@
-<p>consultar-anticipos works!</p>
+<!-- <mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Buscar solicitudes de anticipos
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <br>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaDesde">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="fechaHasta">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-select placeholder="Solicitante" [(ngModel)]="solicitante">
+                        <mat-option *ngFor="let solicitante of solicitantes" [value]="solicitante.usuario.Id">
+                            {{solicitante.usuario.Title}}
+                        </mat-option>
+                    </mat-select>
+                    <input matInput placeholder="Solicitante"> 
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-select placeholder="Estado" [(ngModel)]="estado">
+                        <mat-option *ngFor="let estado of estados" [value]="estado">
+                            {{estado}}
+                        </mat-option>
+                    </mat-select>
+                    <input matInput placeholder="Solicitante"> 
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 offset-4">
+                <button type="button" class="btn btn-primary btn-block" (click)="ConsultarAnticipos()">Buscar</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card> -->
+<mat-card class="shipping-card" *ngIf="anticipos.length > 0">
+    <mat-card-header>
+        <mat-card-title>
+            Consultar anticipos
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="anticipos">
+    
+            <ng-container matColumnDef="Titulo">
+                <th mat-header-cell *matHeaderCellDef> Titulo </th>
+                <td mat-cell *matCellDef="let element"> {{element.Title}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="Solicitante">
+                <th mat-header-cell *matHeaderCellDef> Solicitante </th>
+                <td mat-cell *matCellDef="let element"> {{element.Solicitante.Title}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="FechaSolicitud">
+                <th mat-header-cell *matHeaderCellDef> Fecha de solicitud </th>
+                <td mat-cell *matCellDef="let element"> {{element.Created | date: 'dd/MM/yyyy'}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="FechaFinalizacion">
+                <th mat-header-cell *matHeaderCellDef> Fecha de finalización </th>
+                <td mat-cell *matCellDef="let element"> {{element.FechaFinalizacion | date: 'dd/MM/yyyy'}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="FechaLegalizacion">
+                <th mat-header-cell *matHeaderCellDef> Fecha de legalización </th>
+                <td mat-cell *matCellDef="let element"> {{element.FechaLegalizacion | date: 'dd/MM/yyyy'}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="Anticipo">
+                <th mat-header-cell *matHeaderCellDef> Ver anticipo </th>
+                <td mat-cell *matCellDef="let element, index as i">
+                    <button type="button" class="btn btn-primary" (click)="Navegar(element, 'Anticipo')">Ver</button>
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="Legalizacion">
+                <th mat-header-cell *matHeaderCellDef> Ver legalización </th>
+                <td mat-cell *matCellDef="let element, index as i">
+                    <button type="button" class="btn btn-primary" (click)="Navegar(element, 'Legalizacion')">Ver</button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Reportes">
+                <th mat-header-cell *matHeaderCellDef> Reporte de legalización </th>
+                <td mat-cell *matCellDef="let element">
+                    <button type="button" class="btn btn-default" (click)="ConstruirArrayDatos(element.Id)">PDF</button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Facturas">
+                <th mat-header-cell *matHeaderCellDef>Facturas </th>
+                <td mat-cell *matCellDef="let element"></td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="columnsDetalle"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsDetalle;"></tr>
+        </table>
+    </mat-card-content>
+</mat-card>
+
+
+<!-- modal anticipo -->
+<ng-template #detalleAnticipo>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Detalle anticipo</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <table class="table table-striped" id="tablaDetalleAnticipo">
+            <thead class="thead-ligth">
+              <tr>
+                <th scope="col">Tipo de gasto</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Moneda</th>
+                <th scope="col">Valor unitario</th>
+                <th scope="col">Valor Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of data">
+                <td>{{item.tipoGasto}}</td>
+                <td>{{item.descripcion}}</td>
+                <td>{{item.moneda}}</td>
+                <td>{{item.valorUnitario | currency}}</td>
+                <td>{{item.valorTotal | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</ng-template>
+
+<!-- modal legalizacion -->
+<ng-template #detalleLegalizacion>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Detalle legalización</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <label for=""><b>Detalle</b></label>
+        <table class="table table-striped" id="tablaDetalleLegalizacion">
+            <thead class="thead-ligth">
+              <tr>
+                <th scope="col">Tipo de gasto</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Beneficiario</th>
+                <th scope="col">Moneda</th>
+                <th scope="col">Valor Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of data[0].detalle">
+                <td>{{item.tipo}}</td>
+                <td>{{item.descripcion}}</td>
+                <td>{{item.beneficiario}}</td>
+                <td>{{item.moneda}}</td>
+                <td>{{item.valorTotal | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <label for=""><b>Resumen</b></label>
+          <table class="table table-striped" id="tablaResumenLegalizacion">
+            <thead class="thead-ligth">
+              <tr>
+                <th scope="col">Tipo</th>
+                <th scope="col">Concepto</th>
+                <th scope="col">Pesos</th>
+                <th scope="col">Dólares</th>
+                <th scope="col">Euros</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data[0].resumen">
+                    <td>{{item.tipo}}</td>
+                    <td>{{item.concepto}}</td>
+                    <td>{{item.Peso | currency}}</td>
+                    <td>{{item.Dolar | currency}}</td>
+                    <td>{{item.Euro | currency}}</td>
+                </tr>
+            </tbody>
+          </table>
+    </div>
+</ng-template>
+
