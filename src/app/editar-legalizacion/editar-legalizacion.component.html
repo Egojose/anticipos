@@ -383,9 +383,26 @@
         </div>
     </mat-card-content>
 </mat-card>
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Cargar facturas
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="shipping-card">
+        <div class="row">
+            <div class="col">
+                <input type="file" (change)="AdjuntarSoporte($event)">
+                <span *ngIf="alertarExtension"  style="color: red" class="alerta">
+                   formatos permitidos: jpg, pdf, eml, doc, docx
+                </span>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
 <div class="row">
     <div class="col-6">
-        <button type="button" class="btn btn-success btn-block" (click)="Enviar()">Enviar para aprobación</button>
+        <button type="button" class="btn btn-success btn-block" (click)="Enviar()">Solicitar aprobación</button>
     </div>
     <div class="col-6">
         <button type="button" class="btn btn-primary btn-block" (click)="GuardadoParcial()">Guardar para mas tarde</button>
