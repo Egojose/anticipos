@@ -19,7 +19,9 @@ const routes: Routes = [
   {path: 'legalizar-anticipo', component: LegalizarAnticipoComponent},
   {path: 'desembolsar-anticipo', component: DesembolsarAnticipoComponent},
   {path: 'editar-legalizacion', component: EditarLegalizacionComponent},
-  {path: 'aprobar-legalizacion', component: AprobarLegalizacionComponent}
+  {path: 'aprobar-legalizacion', component: AprobarLegalizacionComponent},
+  {path: 'consultar-legalizacion', component: AprobarLegalizacionComponent},
+  {path: 'consultar-anticipo', component: AprobarAnticipoComponent}
 ];
 
 @NgModule({
