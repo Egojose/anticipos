@@ -43,6 +43,7 @@ export class MisPendientesComponent implements OnInit {
     element.Estado === 'Por legalizar' && this.router.navigate(['/legalizar-anticipo']);
     (element.Estado === 'Guardado parcial' || element.Estado === 'Rechazado') && this.router.navigate(['/editar-legalizacion']);
     element.Estado === 'Por aprobar legalización' && this.router.navigate(['/aprobar-legalizacion']);
+    element.Estado === 'Por confirmar' && this.router.navigate(['/aprobar-legalizacion']);
   }
 
   EnviarElemento(element) {
