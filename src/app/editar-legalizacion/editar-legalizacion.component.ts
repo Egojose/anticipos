@@ -43,14 +43,17 @@ export class EditarLegalizacionComponent implements OnInit {
   saldoEurosAfavor: string;
   resumenCuentas = [];
   resumen = new MatTableDataSource(this.resumenCuentas)
-  detalleItemsLegalizacion: { detalle: any[]; resumen: any[]; saldoAfavor: { Peso: string; Dolar: string; Euro: string; }; urlFacturas?: string };
+  detalleItemsLegalizacion: { detalle: any[]; resumen: any[]; saldoAfavor: { Peso: string; Dolar: string; Euro: string; }; urlFacturas?: string, idDocumento?: number };
   arrayDetalleLegalizacion = [];
   urlDocumento: string;
   archivo: any;
   nombreArchivo: string;
   extensionArchivo: string;
   alertarExtension: boolean;
-  biblioteca = 'DocumentosAnticipos'
+  biblioteca = 'DocumentosAnticipos';
+  urlFacturas: string;
+  idDocumento: number;
+  Observaciones: string;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -63,9 +66,12 @@ export class EditarLegalizacionComponent implements OnInit {
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
     console.log(this.pendienteArr);
+    this.Observaciones = this.pendienteArr[0].ComentariosContador;
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     let arrDetalle = JSON.parse(this.pendienteArr[0].DetalleLegalizacion);
+    if(arrDetalle[0].urlFacturas) this.urlFacturas = arrDetalle[0].urlFacturas;
+    if(arrDetalle[0].idDocumento) this.idDocumento = arrDetalle[0].idDocumento;
     let arrResumen = arrDetalle[0].resumen;
     console.log(arrResumen);
     arrResumen.forEach((x) => {
@@ -293,7 +299,8 @@ export class EditarLegalizacionComponent implements OnInit {
         await f.file.getItem().then(item => {
           let urlRaiz = environment.urlRaiz
           this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
-          this.detalleItemsLegalizacion.urlFacturas = this.urlDocumento
+          this.detalleItemsLegalizacion.urlFacturas = this.urlDocumento;
+          this.detalleItemsLegalizacion.idDocumento = item.ID
           console.log(item)
         })
       }
@@ -314,7 +321,14 @@ export class EditarLegalizacionComponent implements OnInit {
   }
 
 
-  GuardadoParcial() {
+  async GuardadoParcial() {
+    if(this.archivo) {
+      await this.GuardarArchivo();
+    }
+    if(!this.archivo && this.urlFacturas) {
+      this.detalleItemsLegalizacion.urlFacturas = this.urlFacturas;
+      this.detalleItemsLegalizacion.idDocumento = this.idDocumento;
+    }
     this.arrayDetalleLegalizacion.push(this.detalleItemsLegalizacion);
     let id = this.pendienteArr[0].ID
     let obj = {
@@ -334,19 +348,26 @@ export class EditarLegalizacionComponent implements OnInit {
     let counter = 0;
     this.validar(this.detalleLegalizacion.length === 0, 'Revise el detalle  de legalización. Parece no contener datos') && counter++;
     this.validar(this.resumenCuentas.length === 0, 'Revise el resumen de las cuentas. Parece no contener datos') && counter++;
-    this.validar(!this.archivo, 'Debe adjuntar el archivo con las facturas') && counter++;
+    this.validar((!this.archivo && !this.urlFacturas), 'Debe adjuntar el archivo con las facturas') && counter++;
     if(counter > 0) {
       this.spinner.hide();
       return false;
     }
-    await this.GuardarArchivo();
+    if(this.archivo){
+      await this.GuardarArchivo();
+    }
+    else {
+      this.detalleItemsLegalizacion.urlFacturas = this.urlFacturas;
+      this.detalleItemsLegalizacion.idDocumento = this.idDocumento
+    }
     this.arrayDetalleLegalizacion.push(this.detalleItemsLegalizacion);
     let ResponsableId = this.contador.ID;
     let id = this.pendienteArr[0].ID
     let obj = {
       DetalleLegalizacion: JSON.stringify(this.arrayDetalleLegalizacion),
       Estado: 'Por aprobar legalización',
-      ResponsableId
+      ResponsableId,
+      UrlFacturas: this.urlFacturas
     }
     await this.Guardar(id, obj);
   }

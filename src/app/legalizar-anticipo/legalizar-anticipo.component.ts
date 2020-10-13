@@ -44,7 +44,7 @@ export class LegalizarAnticipoComponent implements OnInit {
   saldoPesosAfavor: string;
   saldoDolarAfavor: string;
   saldoEurosAfavor: string;
-  detalleItemsLegalizacion: { detalle: any[]; resumen: any[]; saldoAfavor: { Peso: string; Dolar: string; Euro: string; }; urlFacturas?: string };
+  detalleItemsLegalizacion: { detalle: any[]; resumen: any[]; saldoAfavor: { Peso: string; Dolar: string; Euro: string; }; urlFacturas?: string, idDocumento?: number };
   arrayDetalleLegalizacion = [];
   contador: any;
   extensionArchivo: string;
@@ -274,10 +274,11 @@ export class LegalizarAnticipoComponent implements OnInit {
     await this.Servicio.AgregarDocumentos(this.biblioteca, this.GenerarIdentificador() + '--' + this.nombreArchivo, this.archivo).then(
       async f => {
         await f.file.getItem().then(item => {
+          console.log(item)
           let urlRaiz = environment.urlRaiz
           this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
           this.detalleItemsLegalizacion.urlFacturas = this.urlDocumento
-          console.log(item)
+          this.detalleItemsLegalizacion.idDocumento = item.ID
         })
       }
     )
@@ -297,7 +298,10 @@ export class LegalizarAnticipoComponent implements OnInit {
   }
 
 
-  GuardadoParcial() {
+  async GuardadoParcial() {
+    if(this.archivo) {
+      await this.GuardarArchivo();
+    }
     this.arrayDetalleLegalizacion.push(this.detalleItemsLegalizacion);
     let id = this.pendienteArr[0].ID
     let obj = {
@@ -329,7 +333,8 @@ export class LegalizarAnticipoComponent implements OnInit {
     let obj = {
       DetalleLegalizacion: JSON.stringify(this.arrayDetalleLegalizacion),
       Estado: 'Por aprobar legalización',
-      ResponsableId
+      ResponsableId,
+      UrlFacturas: this.urlDocumento
     }
     await this.Guardar(id, obj);
   }

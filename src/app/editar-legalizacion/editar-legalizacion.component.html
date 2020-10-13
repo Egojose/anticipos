@@ -289,7 +289,7 @@
             </ng-container>
 
             <ng-container matColumnDef="Acciones">
-                <th mat-header-cell *matHeaderCellDef> Fecha de finalización </th>
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
                 <td mat-cell *matCellDef="let element, index as i">
                     <button type="button" class="btn btn-danger" (click)="Eliminar(i)">Eliminar</button>
                 </td>
@@ -390,7 +390,18 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content class="shipping-card">
+        <div class="row" *ngIf="Observaciones">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <textarea matInput rows="1" placeholder="Comentarios del contador" [(ngModel)]="Observaciones" readonly></textarea>
+                </mat-form-field>
+            </div>
+        </div>
         <div class="row">
+            <div class="col" *ngIf="urlFacturas">
+                <a href="{{urlFacturas}}" target="_blank"><button type="button" class="btn btn-default">Ver facturas</button></a>
+                <!-- <span>Ya tiene las facturas cargadas</span>  <span style="color: blue"><a href="{{urlFacturas}}" target="_blank">Ver facturas</a></span> -->
+            </div>
             <div class="col">
                 <input type="file" (change)="AdjuntarSoporte($event)">
                 <span *ngIf="alertarExtension"  style="color: red" class="alerta">
