@@ -69,6 +69,11 @@
                 <th mat-header-cell *matHeaderCellDef> Solicitante </th>
                 <td mat-cell *matCellDef="let element"> {{element.Solicitante.Title}} </td>
             </ng-container>
+
+            <ng-container matColumnDef="Estado">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let element"> {{element.Estado}} </td>
+            </ng-container>
     
             <ng-container matColumnDef="FechaSolicitud">
                 <th mat-header-cell *matHeaderCellDef> Fecha de solicitud </th>
@@ -88,27 +93,35 @@
             <ng-container matColumnDef="Anticipo">
                 <th mat-header-cell *matHeaderCellDef> Ver anticipo </th>
                 <td mat-cell *matCellDef="let element, index as i">
-                    <button type="button" class="btn btn-primary" (click)="Navegar(element, 'Anticipo')">Ver</button>
+                    <button type="button" class="btn btn-primary" (click)="Navegar(element, 'Anticipo')"><fa-icon [icon]="ver"></fa-icon></button>
                 </td>
             </ng-container>
     
             <ng-container matColumnDef="Legalizacion">
                 <th mat-header-cell *matHeaderCellDef> Ver legalización </th>
                 <td mat-cell *matCellDef="let element, index as i">
-                    <button type="button" class="btn btn-primary" (click)="Navegar(element, 'Legalizacion')">Ver</button>
+                    <ng-container *ngIf="element.Estado === 'Por aprobar legalización' || element.Estado === 'Por confirmar' || element.Estado === 'Aprobado'">
+                        <button type="button" class="btn btn-primary" (click)="Navegar(element, 'Legalizacion')"><fa-icon [icon]="ver"></fa-icon></button>
+                    </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="Reportes">
                 <th mat-header-cell *matHeaderCellDef> Reporte de legalización </th>
                 <td mat-cell *matCellDef="let element">
-                    <button type="button" class="btn btn-default" (click)="ConstruirArrayDatos(element.Id)">PDF</button>
+                    <ng-container *ngIf="element.Estado === 'Por confirmar' || element.Estado === 'Aprobado'">
+                        <button type="button" class="btn btn-default" (click)="ConstruirArrayDatos(element.Id)"><fa-icon [icon]="verPdf"></fa-icon></button>
+                    </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="Facturas">
                 <th mat-header-cell *matHeaderCellDef>Facturas </th>
-                <td mat-cell *matCellDef="let element"></td>
+                <td mat-cell *matCellDef="let element">
+                    <ng-container *ngIf="element.UrlFacturas">
+                        <a href="{{element.UrlFacturas}}" target="_blank">Ver facturas</a>
+                    </ng-container>  
+                </td>
             </ng-container>
     
             <tr mat-header-row *matHeaderRowDef="columnsDetalle"></tr>
@@ -204,4 +217,5 @@
           </table>
     </div>
 </ng-template>
+<ngx-spinner></ngx-spinner>
 
