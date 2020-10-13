@@ -45,7 +45,10 @@ export class AprobarLegalizacionComponent implements OnInit {
   detalleItemsLegalizacion: { detalle: any[]; resumen: any[]; saldoAfavor: { Peso: string; Dolar: string; Euro: string; }; };
   arrayDetalleLegalizacion = [];
   Observaciones: string;
-  mostrarElementos = true
+  mostrarElementos = true;
+  mostrarBtnConfirmar = false;
+  tesorero: any;
+  urlFacturas: string;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -54,14 +57,21 @@ export class AprobarLegalizacionComponent implements OnInit {
       this.router.navigate(['/home']);
       return;
     }
+    this.ConsultarTesorero();
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
+    this.Observaciones = this.pendienteArr[0].ComentariosContador
     console.log(this.pendienteArr);
     if(this.pendiente.query) this.mostrarElementos = false;
+    if(this.pendienteArr[0].Estado === 'Por confirmar') {
+      this.mostrarBtnConfirmar = true;
+      this.mostrarElementos = false;
+    } 
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     let arrDetalle = JSON.parse(this.pendienteArr[0].DetalleLegalizacion);
+    if(arrDetalle[0].urlFacturas) this.urlFacturas = arrDetalle[0].urlFacturas
     console.log(arrDetalle);
     let arrResumen = arrDetalle[0].resumen;
     console.log(arrResumen);
@@ -80,6 +90,15 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
+  }
+
+  ConsultarTesorero() {
+    this.Servicio.ConsultarAprobadores().then(
+      (respuesta) => {
+        this.tesorero = respuesta[0].Tesorero;
+        console.log(this.contador)
+      }
+    )
   }
 
   SumarTotales(arr, moneda: string) {
@@ -104,7 +123,13 @@ export class AprobarLegalizacionComponent implements OnInit {
   }
 
   Rechazar() {
-    this.spinner.show()
+    this.spinner.show();
+    let counter = 0;
+    this.validar(!this.Observaciones, 'Debe registrar las observaciones') && counter++;
+    if(counter > 0) {
+      this.spinner.hide();
+      return false
+    }
     let cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha rechazado la legalización del anticipo y es necesario que haga algunas modificaciones' + '<br>' +
     'El motivo del rechazo es <b>' + this.Observaciones + '</b><br>' +
@@ -141,30 +166,51 @@ export class AprobarLegalizacionComponent implements OnInit {
   Aprobar() {
     this.spinner.show();
     let counter = 0
-    this.validar(!this.Observaciones, 'Debe registrar las observaciones') && counter++;
-    if(counter > 0) {
-      this.spinner.hide();
-      return false;
-    }
-    let cuerpo = '<p>Hola</p>' + '<br>' +
-    'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha aprobado la legalización del anticipo ' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
-    let Estado = 'Aprobado';
-    let ResponsableId = null;
-    let Legalizado = true;
-    let ComentariosContador = this.Observaciones;
+    let Estado: string;
+    let ResponsableId: number;
+    let ComentariosContador: string;
     let id = this.pendienteArr[0].ID
-    let obj = {
-      Estado,
-      ResponsableId,
-      Legalizado,
-      ComentariosContador,
-      FechaLegalizacion: new Date()
+    let cuerpo: string;
+    let emailResponsable: string;
+    let obj: object
+
+    if (this.pendienteArr[0].Estado === 'Por aprobar legalización') {
+      this.validar(!this.Observaciones, 'Debe registrar las observaciones') && counter++;
+      if (counter > 0) {
+        this.spinner.hide();
+        return false;
+      };
+      Estado = 'Por confirmar',
+      ResponsableId = this.tesorero.ID;
+      ComentariosContador = this.Observaciones;
+      emailResponsable = this.tesorero.EMail
+      cuerpo = '<p>Hola</p>' + '<br>' +
+        'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha aprobado la legalización del anticipo ' + '<br>' +
+        'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+      obj = {
+        Estado,
+        ResponsableId,
+        ComentariosContador,
+      }
+    }
+    if(this.pendienteArr[0].Estado === 'Por confirmar') {
+      Estado = 'Aprobado',
+      ResponsableId = null,
+      emailResponsable = this.pendienteArr[0].Solicitante.EMail
+      cuerpo = '<p>Hola</p>' + '<br>' +
+        'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha confirmado y cerrado la legalización del anticipo ' + '<br>' +
+        'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+      obj = {
+        Estado,
+        ResponsableId,
+        Legalizado: true,
+        FechaLegalizacion: new Date()
+      }
     }
 
     this.Servicio.ActualizarAnticipo(id, obj).then(
       (respuesta) => {
-        this.envairNotificacion(cuerpo, this.pendienteArr[0].Solicitante.EMail);
+        this.envairNotificacion(cuerpo, emailResponsable);
         this.mostrarExitoso('La legalización se aprobó correctamente');
         sessionStorage.clear();
         this.router.navigate(['/home']);

@@ -131,14 +131,14 @@ export class AprobarAnticipoComponent implements OnInit {
       }
     } 
     if(porAprobar.length > 0 && this.pendienteArr[0].Estado === 'Por aprobar') {
-      this.responsable = this.aprobadores[this.index].Director;
+      this.responsable = porAprobar[0].Director;
       cuerpo = '<p>Hola</p>' + '<br>' +
       'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
       'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
       emailResponsable = this.responsable.EMail
       obj = {
         Aprobadores,
-        ResponsableId: this.responsable[0].ID
+        ResponsableId: this.responsable.ID
       }
     }  
     if(porAprobar.length === 0 && this.pendienteArr[0].Estado === 'Por aprobar') {

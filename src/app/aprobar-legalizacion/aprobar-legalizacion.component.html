@@ -299,21 +299,25 @@
         <div class="row">
             <div class="col">
                 <mat-form-field class="full-width">
-                    <textarea matInput rows="2" placeholder="Observaciones" [(ngModel)]="Observaciones" [readonly]="!mostrarElementos"></textarea>
+                    <textarea matInput rows="2" placeholder="Observaciones" [(ngModel)]="Observaciones" [readonly]="!mostrarElementos || mostrarBtnConfirmar"></textarea>
                 </mat-form-field>
             </div>
-            <div class="col" *ngIf="mostrarElementos">
-                <label for="">Cargar facturas</label><br>
-                <input type="file">
+            <div class="col" *ngIf="urlFacturas">
+                <a href="{{urlFacturas}}" target="_blank"><button type="button" class="btn btn-default">Ver facturas</button></a>
             </div>
         </div>
     </mat-card-content>
 </mat-card>
 <div class="row" *ngIf="mostrarElementos">
     <div class="col-6">
-        <button type="button" class="btn btn-success btn-block" >Aprobar</button>
+        <button type="button" class="btn btn-success btn-block" (click)="Aprobar()">Aprobar</button>
     </div>
     <div class="col-6">
-        <button type="button" class="btn btn-danger btn-block" >Rechazar</button>
+        <button type="button" class="btn btn-danger btn-block" (click)="Rechazar()">Rechazar</button>
+    </div>
+</div>
+<div class="row" *ngIf="mostrarBtnConfirmar">
+    <div class="col-6 offset-3">
+        <button type="button" class="btn btn-success btn-block" (click)="Aprobar()">Confirmar y cerrar</button>
     </div>
 </div>
