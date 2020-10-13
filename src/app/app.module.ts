@@ -27,7 +27,9 @@ import { DesembolsarAnticipoComponent } from './desembolsar-anticipo/desembolsar
 import { EditarLegalizacionComponent } from './editar-legalizacion/editar-legalizacion.component';
 import { AprobarLegalizacionComponent } from './aprobar-legalizacion/aprobar-legalizacion.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import {MatIconModule} from '@angular/material/icon'
+import {MatIconModule} from '@angular/material/icon';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+
 
 
 
@@ -61,7 +63,8 @@ import {MatIconModule} from '@angular/material/icon'
     MatTableModule,
     NgxCurrencyModule,
     ModalModule.forRoot(),
-    MatIconModule
+    MatIconModule,
+    FontAwesomeModule
     
   ],
   providers: [],
