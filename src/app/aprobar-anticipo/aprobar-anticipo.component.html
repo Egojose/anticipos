@@ -50,26 +50,26 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <table mat-table [dataSource]="detalleUnidades">
+        <mat-table [dataSource]="detalleUnidades">
             <ng-container matColumnDef="Director">
-                <th mat-header-cell *matHeaderCellDef> Director </th>
-                <td mat-cell *matCellDef="let element"> {{element.Director.Title}} </td>
+                <mat-header-cell *matHeaderCellDef> Director </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Director"> {{element.Director.Title}} </mat-cell>
               </ng-container>
             
               <ng-container matColumnDef="Ceco">
-                <th mat-header-cell *matHeaderCellDef> Ceco </th>
-                <td mat-cell *matCellDef="let element"> {{element.Ceco}} </td>
+                <mat-header-cell *matHeaderCellDef> Ceco </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Ceco"> {{element.Ceco}} </mat-cell>
               </ng-container>
             
               <ng-container matColumnDef="Porcentaje">
-                <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
-                <td mat-cell *matCellDef="let element"> {{element.Porcentaje}} </td>
+                <mat-header-cell *matHeaderCellDef> Porcentaje </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Porcentaje"> {{element.Porcentaje}} </mat-cell>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedUnidades"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedUnidades;"></tr>
+              <mat-header-row *matHeaderRowDef="displayedUnidades"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedUnidades;"></mat-row>
 
-        </table>
+        </mat-table>
     </mat-card-content>
 </mat-card>
 <mat-card class="shipping-card">
@@ -80,41 +80,41 @@
     </mat-card-header>
     <hr>
     <mat-card-content>
-        <table mat-table [dataSource]="detalleAnticipo">
+        <mat-table [dataSource]="detalleAnticipo">
 
             <ng-container matColumnDef="TipoGasto">
-              <th mat-header-cell *matHeaderCellDef> Tipo de gasto </th>
-              <td mat-cell *matCellDef="let element"> {{element.tipoGasto}} </td>
+              <mat-header-cell *matHeaderCellDef> Tipo de gasto </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="TipoGasto"> {{element.tipoGasto}} </mat-cell>
             </ng-container>
           
             <ng-container matColumnDef="Descripcion">
-              <th mat-header-cell *matHeaderCellDef> Descripción </th>
-              <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+              <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Descripcion"> {{element.descripcion}} </mat-cell>
             </ng-container>
           
             <ng-container matColumnDef="Cantidad">
-              <th mat-header-cell *matHeaderCellDef> Cantidad </th>
-              <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+              <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Cantidad"> {{element.cantidad}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Moneda">
-                <th mat-header-cell *matHeaderCellDef> Moneda </th>
-                <td mat-cell *matCellDef="let element"> {{element.moneda}} </td>
+                <mat-header-cell *matHeaderCellDef> Moneda </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Moneda"> {{element.moneda}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="ValorUnitario">
-                <th mat-header-cell *matHeaderCellDef> Valor unitario </th>
-                <td mat-cell *matCellDef="let element"> {{element.valorUnitario | currency}} </td>
+                <mat-header-cell *matHeaderCellDef> Valor unitario </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="ValorUnitario"> {{element.valorUnitario | currency}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="ValorTotal">
-                <th mat-header-cell *matHeaderCellDef> Valor total </th>
-                <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency}} </td>
+                <mat-header-cell *matHeaderCellDef> Valor total </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="ValorTotal"> {{element.valorTotal | currency}} </mat-cell>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
         <br>
         <hr>
         <div class="row">
@@ -147,31 +147,31 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <table mat-table [dataSource]="aprobadores">
+        <mat-table [dataSource]="aprobadores">
 
             <ng-container matColumnDef="Nombre">
-                <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                <td mat-cell *matCellDef="let element">
+                <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Nombre">
                     <span><b>{{element.Director.Title}}</b></span><br>
                     <span>{{element.fecha}}</span>
-                </td>
+                </mat-cell>
             </ng-container>
           
             <ng-container matColumnDef="Firma">
-              <th mat-header-cell *matHeaderCellDef> Firma </th>
-              <td mat-cell *matCellDef="let element">
+              <mat-header-cell *matHeaderCellDef> Firma </mat-header-cell>>
+              <mat-cell *matCellDef="let element" data-label="Firma">
                    <img src="{{element.Director.Firma}}" alt="" id="firma" style="width: 200px;">
-              </td>
+              </mat-cell>>
             </ng-container>
 
             <ng-container matColumnDef="Rol">
-                <th mat-header-cell *matHeaderCellDef> Rol </th>
-                <td mat-cell *matCellDef="let element">{{element.rol}}</td>
+                <mat-header-cell *matHeaderCellDef> Rol </mat-header-cell>>
+                <mat-cell *matCellDef="let element" data-label="Rol">{{element.rol}}</mat-cell>>
               </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="columnsAprobadores"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnsAprobadores;"></tr>
-          </table>
+            <mat-header-row *matHeaderRowDef="columnsAprobadores"></mat-header-row>>
+            <mat-row *matRowDef="let row; columns: columnsAprobadores;"></mat-row>>
+        </mat-table>
           <div class="row" *ngIf="!ocultarBtn && mostrarBtn">
               <div class="col-6 offset-3">
                   <button type="button" class="btn btn-success btn-block" (click)="Aprobar()" [disabled]="ocultarBtn">Aprobar</button>
