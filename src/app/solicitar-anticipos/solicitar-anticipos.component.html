@@ -49,7 +49,7 @@
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                         <span *ngIf="form.controls.fechaFinalizacion.value && form.controls.fechaFinalizacion.value !== ' '" style="color: red" class="alerta">
-                            Se deben legalizar los gastos de anticipos máximo 5 días hábilies después de esta fecha
+                            Se deben legalizar los gastos de anticipos máximo 5 días hábiles después de esta fecha
                         </span>
                     </div>
                 </div>
@@ -184,12 +184,12 @@
                     </div>
                     <div class="col">
                         <mat-form-field class="full-width"> 
-                            <textarea matInput placeholder="Descricpión" formControlName="DescripcionAnticipo"></textarea>
+                            <textarea matInput placeholder="Descripción" formControlName="DescripcionAnticipo"></textarea>
                         </mat-form-field>
                     </div>
                     <div class="col">
                         <mat-form-field class="full-width">
-                            <input matInput type="number" placeholder="cantidad" formControlName="Cantidad">
+                            <input matInput type="number" (change)="controlarCantidad()" placeholder="cantidad" formControlName="Cantidad">
                         </mat-form-field>
                     </div>
                 </div>
