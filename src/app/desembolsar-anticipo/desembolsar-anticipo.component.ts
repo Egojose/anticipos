@@ -181,7 +181,7 @@ export class DesembolsarAnticipoComponent implements OnInit {
     let cuerpo = '<p>Hola</p>' + '<br>' +
     '<p>Se ha hecho el desembolso del anticipo que solicitó.</p>' + '<br>' +
     '<p>Por favor recuerde que tiene 5 días hábilies después del ' + this.formatearFecha(new Date(this.anticipo[0].FechaFinalizacion)) + ' para hacer la legalización.</p>' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
 
     let emailProps: IEmailProperties = {
       To: [this.anticipo[0].Solicitante.EMail],

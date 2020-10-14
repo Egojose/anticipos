@@ -133,8 +133,8 @@ export class SolicitarAnticiposComponent implements OnInit {
 
   AsignarConsecutivo($event) {
     console.log($event);
-    if($event === 'Enovel Consultores') this.consecutivo = this.consecutivos[0].ConsecutivoConsultores;
-    if($event === 'Enovel Asociados')this.consecutivo = this.consecutivos[0].ConsecutivoAsociados;
+    if($event === 'Araujo Ibarra Consultores Internacionales S.A.S') this.consecutivo = this.consecutivos[0].ConsecutivoConsultores;
+    if($event === 'Araujo Ibarra & Asociados S.A.')this.consecutivo = this.consecutivos[0].ConsecutivoAsociados;
     this.form.controls.Consecutivo.setValue(this.consecutivo);
     // this.validarConsecutivo(this.form.controls.Consecutivo.value);
   }
@@ -297,14 +297,14 @@ export class SolicitarAnticiposComponent implements OnInit {
     )
     let consecutivoAcomparar: string;
     let empresa = this.form.controls.Empresa.value.RazonSocial
-    empresa === 'Enovel Consultores' ? consecutivoAcomparar = consecutivos[0].ConsecutivoConsultores : consecutivoAcomparar = consecutivos[0].ConsecutivoAsociados;
+    empresa === 'Araujo Ibarra Consultores Internacionales S.A.S' ? consecutivoAcomparar = consecutivos[0].ConsecutivoConsultores : consecutivoAcomparar = consecutivos[0].ConsecutivoAsociados;
     this.form.controls.Consecutivo.setValue(consecutivoAcomparar);
     let consNumber;
     let identificador = (+consecutivoAcomparar.split('-')[1]) + 1;
-    if(identificador < 10 && empresa === 'Enovel Consultores') consNumber = `C-0${identificador}`;
-    if(identificador < 100 && empresa === 'Enovel Consultores') consNumber = `C-00${identificador}`;
-    if(identificador < 10 && empresa === 'Enovel Asociados') consNumber = `A-0${identificador}`;
-    if(identificador < 100 && empresa === 'Enovel Asociados') consNumber = `A-00${identificador}`;
+    if(identificador < 10 && empresa === 'Araujo Ibarra Consultores Internacionales S.A.S') consNumber = `C-0${identificador}`;
+    if(identificador < 100 && empresa === 'Araujo Ibarra Consultores Internacionales S.A.S') consNumber = `C-00${identificador}`;
+    if(identificador < 10 && empresa === 'Araujo Ibarra & Asociados S.A.') consNumber = `A-0${identificador}`;
+    if(identificador < 100 && empresa === 'Araujo Ibarra & Asociados S.A.') consNumber = `A-00${identificador}`;
     this.nuevoConsecutivo = consNumber;
   }
 
@@ -358,7 +358,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     }
 
     let objConsecutivo = {}
-    Empresa === 'Enovel Consultores' ? objConsecutivo = { ConsecutivoConsultores: this.nuevoConsecutivo } : objConsecutivo = { ConsecutivoAsociados: this.nuevoConsecutivo }
+    Empresa === 'Araujo Ibarra Consultores Internacionales S.A.S' ? objConsecutivo = { ConsecutivoConsultores: this.nuevoConsecutivo } : objConsecutivo = { ConsecutivoAsociados: this.nuevoConsecutivo }
 
     await this.GuardarDatos(obj, this.consecutivos[0].Id, objConsecutivo, Empresa);
   }
@@ -384,7 +384,7 @@ export class SolicitarAnticiposComponent implements OnInit {
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.datosJson.usuario.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
 
     let emailProps: IEmailProperties = {
       To: [this.responsable.EMail],

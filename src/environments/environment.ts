@@ -4,12 +4,12 @@
 
 export const environment = {
   production: false,
-  urlRaiz: 'https://enovelsoluciones.sharepoint.com',
-  urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Servicios',
-  urlGH: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Gestion-humana',
-  urlJobs: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/Jobs',
-  urlRelativa: '/sites/IntranetAraujo/Gestion-humana',
-  urlWebServ: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios',
+  urlRaiz: 'https://aribasas.sharepoint.com/',
+  urlWeb: 'https://aribasas.sharepoint.com/sites/IntranetPruebas/Servicios/',
+  urlGH: 'https://aribasas.sharepoint.com/sites/IntranetPruebas/Gestion-humana',
+  urlJobs: 'https://aribasas.sharepoint.com/sites/IntranetPruebas/Jobs',
+  urlRelativa: '/sites/IntranetPruebas/Gestion-humana',
+  urlWebServ: 'https://aribasas.sharepoint.com/sites/IntranetPruebas/Servicios/',
   listaAnticipos: 'Anticipos',
   listaEmpresas: 'EmpresasAraujoIbarra',
   listaUnidades: 'UnidadNegocios',

@@ -133,7 +133,7 @@ export class AprobarLegalizacionComponent implements OnInit {
     let cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha rechazado la legalización del anticipo y es necesario que haga algunas modificaciones' + '<br>' +
     'El motivo del rechazo es <b>' + this.Observaciones + '</b><br>' +
-    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
 
     let id = this.pendienteArr[0].ID
     let Estado = 'Rechazado';
@@ -186,7 +186,7 @@ export class AprobarLegalizacionComponent implements OnInit {
       emailResponsable = this.tesorero.EMail
       cuerpo = '<p>Hola</p>' + '<br>' +
         'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha aprobado la legalización del anticipo ' + '<br>' +
-        'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
+        'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       obj = {
         Estado,
         ResponsableId,
@@ -199,7 +199,7 @@ export class AprobarLegalizacionComponent implements OnInit {
       emailResponsable = this.pendienteArr[0].Solicitante.EMail
       cuerpo = '<p>Hola</p>' + '<br>' +
         'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha confirmado y cerrado la legalización del anticipo ' + '<br>' +
-        'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
+        'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       obj = {
         Estado,
         ResponsableId,
