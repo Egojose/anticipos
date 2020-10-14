@@ -161,6 +161,12 @@ export class SolicitarAnticiposComponent implements OnInit {
     }
   }
 
+  controlarCantidad() {
+    if(+this.form.controls.Cantidad.value < 0) {
+      this.form.controls.Cantidad.setValue(0)
+    }
+  }
+
   habilitarBtnParticipacion() {
     if(this.form.controls.Director.value.Director) {
       this.habilitarBtn = true;
