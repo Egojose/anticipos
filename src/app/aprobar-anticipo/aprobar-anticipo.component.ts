@@ -121,7 +121,7 @@ export class AprobarAnticipoComponent implements OnInit {
       this.responsable = this.tesorero
       cuerpo = '<p>Hola</p>' + '<br>' +
       'Al usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> se le ha aprobado un anticipo el cual requiere de su intervención' + '<br>' +
-      'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+      'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       emailResponsable = this.tesorero.EMail
       obj = {
         Aprobadores,
@@ -134,7 +134,7 @@ export class AprobarAnticipoComponent implements OnInit {
       this.responsable = porAprobar[0].Director;
       cuerpo = '<p>Hola</p>' + '<br>' +
       'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
-      'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+      'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       emailResponsable = this.responsable.EMail
       obj = {
         Aprobadores,
@@ -145,7 +145,7 @@ export class AprobarAnticipoComponent implements OnInit {
       this.responsable = this.gerente[0];
       cuerpo = '<p>Hola</p>' + '<br>' +
       'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
-      'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+      'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       emailResponsable = this.responsable.EMail
       obj = {
         Aprobadores,

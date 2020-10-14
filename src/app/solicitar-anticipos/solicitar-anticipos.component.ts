@@ -378,7 +378,7 @@ export class SolicitarAnticiposComponent implements OnInit {
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.datosJson.usuario.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
 
     let emailProps: IEmailProperties = {
       To: [this.responsable.EMail],

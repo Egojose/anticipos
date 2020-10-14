@@ -395,7 +395,7 @@ export class EditarLegalizacionComponent implements OnInit {
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha legalizado un anticipo el cual requiere de su aprobación' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     let emailProps: IEmailProperties = {
       To: [this.contador.EMail],
       Subject: 'Solicitud de anticipos',
