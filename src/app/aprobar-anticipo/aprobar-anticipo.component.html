@@ -9,29 +9,34 @@
         <div class="row" *ngFor="let item of pendienteArr">
             <div class="col">
                 <ul>
-                    <li>Solicitante: <b>{{item.Solicitante.Title}}</b></li>
-                    <hr>
                     <li>Título: <b>{{item.Title}}</b></li>
                     <hr>
-                    <li>Descripción: <b>{{item.Descripcion}}</b></li>
-                </ul>
-            </div>
-            <div class="col">
-                <ul>
                     <li>Consecutivo: <b>{{item.Consecutivo}}</b></li>
                     <hr>
-                    <li>Reembolsable: <b>{{item.Reembolsable == true ? 'Sí' : 'No'}}</b></li>
+                    <li>Solicitante: <b>{{item.Solicitante.Title}}</b></li>
                     <hr>
-                    <li>Tipo de solicitud: <b>{{item.TipoSolicitud}}</b></li>
+                    <li>Empresa: <b>{{item.Empresa}}</b></li>
                 </ul>
             </div>
             <div class="col">
                 <ul>
-                    <li>Id compra asociada: <b>{{item.IdCompraAsociada}}</b></li>
+                    <li>Tipo de solicitud: <b>{{item.TipoSolicitud}}</b></li>
+                    <hr>
+                    <li>Reembolsable: <b>{{item.Reembolsable == true ? 'Sí' : 'No'}}</b></li>
                     <hr>
                     <li>Cliente: <b>{{item.Cliente}}</b></li>
                     <hr>
                     <li>Job: <b>{{item.Job}}</b></li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    <li>Fecha de Solicitud: <b>{{item.Created | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                    <li>Fecha de aprobación: <b>{{item.FechaAprobacion | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
+                    <li>Fecha de finalización: <b>{{item.FechaFinalizacion | date: 'dd/MM/yyyy'}}</b></li>
+                    <hr>
                 </ul>
             </div>
             <hr>
