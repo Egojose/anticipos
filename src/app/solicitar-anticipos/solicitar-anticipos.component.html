@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" *ngIf="!bloquearSolicitud">
     <div class="container">
         <mat-card class="shipping-card">
             <mat-card-header>
@@ -298,3 +298,4 @@
         </mat-card>
     </div>
 </form>
+<app-advertencia-solicitudes [bloquearSolicitud]="bloquearSolicitud" *ngIf="bloquearSolicitud"></app-advertencia-solicitudes>

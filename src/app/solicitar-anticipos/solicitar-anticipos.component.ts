@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { IEmailProperties } from "@pnp/sp/presets/all";
+import { counter } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-solicitar-anticipos',
@@ -36,6 +37,7 @@ export class SolicitarAnticiposComponent implements OnInit {
   nuevoConsecutivo: any;
   clientes = [];
   nroJob = [];
+  bloquearSolicitud: boolean;
 
   constructor(public Servicios: ServiciosService, public fb: FormBuilder, public router: Router, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -44,9 +46,6 @@ export class SolicitarAnticiposComponent implements OnInit {
       this.router.navigate(['/home']);
       return;
     }
-    this.datosString = sessionStorage.getItem('datosUsuario');
-    this.datosJson = JSON.parse(this.datosString);
-    console.log(this.datosJson.usuario);
     this.form = this.fb.group({
       Titulo: ['', Validators.required],
       Descripcion: ['', Validators.required],
@@ -69,6 +68,11 @@ export class SolicitarAnticiposComponent implements OnInit {
       totalDolares: [''],
       totalEuros: ['']
     })
+    this.datosString = sessionStorage.getItem('datosUsuario');
+    this.datosJson = JSON.parse(this.datosString);
+    console.log(this.datosJson);
+    console.log(this.datosJson.usuario);
+    if(this.datosJson.pendientes.length >= 2) this.bloquearSolicitud = true;
     this.usuarioActual = this.datosJson.usuario;
     this.ObtenerEmpresas();
     this.ObtenerUnidadNegocios();
@@ -173,6 +177,14 @@ export class SolicitarAnticiposComponent implements OnInit {
     }
   }
 
+  ValidarCeco(arr, value: string) {
+    let ceco: number
+    if(arr.length > 0) {
+      ceco = arr.findIndex((x) => x.Ceco === value)
+    }
+    return ceco;
+  }
+
   AgregarParticipacion() {
     let contador = 0;
     this.validar((!this.form.controls.Porcentaje.value || this.form.controls.Porcentaje.value === ''), 'Debe agregar un porcentaje') && contador++
@@ -193,6 +205,12 @@ export class SolicitarAnticiposComponent implements OnInit {
       Porcentaje: +this.form.controls.Porcentaje.value,
       aprobado: false,
       rol: 'Director unidad de negocio'
+    }
+    let existeCeco = this.ValidarCeco(this.usuariosAprobadores, aprobador.Ceco);
+    
+    this.validar(existeCeco > -1, 'Esta unidad de negocio ya hace parte de los aprobadores') && contador++;
+    if(contador > 0 ) {
+      return false; 
     }
     let suma = 0;
     this.usuariosAprobadores.push(aprobador);
