@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   firmaGerente;
   gerenteAdmin;
   errores = 0
+  bloquearSolicitud: boolean;
 
   constructor(public Servicios: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService) {}
 
@@ -50,6 +51,7 @@ export class AppComponent implements OnInit {
       (respuesta) => {
         this.pendientes = respuesta;
         console.log(this.pendientes)
+        if(this.pendientes.length >= 2) this.bloquearSolicitud = true;
       }
     ).catch(
       (err) => {
