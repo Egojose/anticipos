@@ -29,7 +29,8 @@ import { AprobarLegalizacionComponent } from './aprobar-legalizacion/aprobar-leg
 import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatIconModule} from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AdvertenciaSolicitudesComponent } from './advertencia-solicitudes/advertencia-solicitudes.component'
+import { AdvertenciaSolicitudesComponent } from './advertencia-solicitudes/advertencia-solicitudes.component';
+import { MisSolicitudesComponent } from './mis-solicitudes/mis-solicitudes.component'
 
 
 
@@ -45,7 +46,8 @@ import { AdvertenciaSolicitudesComponent } from './advertencia-solicitudes/adver
     DesembolsarAnticipoComponent,
     EditarLegalizacionComponent,
     AprobarLegalizacionComponent,
-    AdvertenciaSolicitudesComponent
+    AdvertenciaSolicitudesComponent,
+    MisSolicitudesComponent
   ],
   imports: [
     BrowserModule,
