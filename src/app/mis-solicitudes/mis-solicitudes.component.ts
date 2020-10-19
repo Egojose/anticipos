@@ -69,7 +69,7 @@ export class MisSolicitudesComponent implements OnInit {
   async Reactivar() {
     this.cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.anticipos[0].Solicitante.Title + '</b> ha Reactivado el anticipo' + this.consecutivo + ' el cual requiere de su intervención' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     let elements = JSON.parse(this.solicitud.EstadoActual);
     console.log(elements)
     let idResponsable = elements.responsable;
@@ -86,7 +86,7 @@ export class MisSolicitudesComponent implements OnInit {
   async Pausar() {
     this.cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.anticipos[0].Solicitante.Title + '</b> ha pausado el anticipo' + this.consecutivo + ' una vez que se reactive se le notificará' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     console.log(this.solicitud)
     let estado = 'Pausado';
     let id = this.solicitud.Id;
@@ -107,7 +107,7 @@ export class MisSolicitudesComponent implements OnInit {
   async Cancelar() {
     this.cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.anticipos[0].Solicitante.Title + '</b> ha cancelado el anticipo' + this.consecutivo + ' el cual ya no requiere de su intervención' + '<br>' +
-    'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
+    'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     let estado = 'Cancelado';
     let id = this.solicitud.Id;
     let idResponsable = null;
