@@ -118,6 +118,15 @@ export class ServiciosService {
     return respuesta;
   }
 
+  ConsultarTodosAnticiposXusuraio(id) {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
+    .select('*', 'Solicitante/Title, Solicitante/EMail, Solicitante/Id', 'Responsable/Title, Responsable/EMail, Responsable/Id')
+    .expand('Solicitante', 'Responsable')
+    .filter("Solicitante eq '"+id+"' and Legalizado eq 0 and Cancelado eq 0")
+    .getAll();
+    return respuesta;
+  }
+
   ConsultarEmpresas() {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaEmpresas).items.select('*').getAll();
     return respuesta;
@@ -125,7 +134,8 @@ export class ServiciosService {
 
   ConsultarPendientes(idUsuario) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
-    .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID', 'Solicitante/Title, Solicitante/EMail, Solicitante/ID').expand('Responsable, Solicitante')
+    .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID', 'Solicitante/Title, Solicitante/EMail, Solicitante/ID')
+    .expand('Responsable, Solicitante')
     .filter("Responsable eq '"+idUsuario+"' and Legalizado eq 0").getAll();
     return respuesta;
   }
