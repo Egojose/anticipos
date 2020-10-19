@@ -42,7 +42,11 @@
                     || element.Estado === 'Por desembolsar' && element.Pausado === false">
                     Pausar
                     </button>
-                    <button type="button" class="btn btn-success" (click)="openModal(template, 'Reactivar', element)" *ngIf="element.Pausado === true" >Reactivar</button>
+                    <button type="button" class="btn btn-success"
+                     (click)="openModal(template, 'Reactivar', element)"
+                      *ngIf="element.Pausado === true" >
+                      Reactivar
+                    </button>
                     <button type="button" class="btn btn-danger" (click)="openModal(template, 'Cancelar', element)" 
                     *ngIf="element.Estado === 'Por aprobar' || element.Estado === 'Por aprobar gerente administrativo'
                     || element.Estado === 'Por desembolsar'">
