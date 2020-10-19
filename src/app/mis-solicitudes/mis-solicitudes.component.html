@@ -1,0 +1,89 @@
+<mat-card class="shipping-card">
+    <mat-card-header>
+        <mat-card-title>
+            Mis solicitues activas
+        </mat-card-title>
+    </mat-card-header>
+    <hr>
+    <mat-card-content>
+        <mat-table [dataSource]="anticipos">
+
+            <ng-container matColumnDef="Titulo">
+              <mat-header-cell *matHeaderCellDef> Título </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Titulo"> {{element.Title}} </mat-cell>
+            </ng-container>
+          
+            <ng-container matColumnDef="Descripcion">
+              <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Descripcion"> {{element.Descripcion}} </mat-cell>
+            </ng-container>
+          
+            <ng-container matColumnDef="Solicitante">
+              <mat-header-cell *matHeaderCellDef> Solicitante </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Solicitante"> {{element.Solicitante.Title}} </mat-cell>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="Empresa">
+                <mat-header-cell *matHeaderCellDef> Empresa </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Empresa"> {{element.Empresa}} </mat-cell>
+            </ng-container> -->
+
+            <ng-container matColumnDef="Estado">
+                <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Estado"> {{element.Estado}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Acciones">
+                <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Acciones">
+                    <button type="button" class="btn btn-warning"
+                     (click)="openModal(template, 'Pausar', element)"
+                     *ngIf="element.Estado === 'Por aprobar' || element.Estado === 'Por aprobar gerente administrativo'
+                    || element.Estado === 'Por desembolsar' && element.Pausado === false">
+                    Pausar
+                    </button>
+                    <button type="button" class="btn btn-success"
+                     (click)="openModal(template, 'Reactivar', element)"
+                      *ngIf="element.Pausado === true" >
+                      Reactivar
+                    </button>
+                    <button type="button" class="btn btn-danger" (click)="openModal(template, 'Cancelar', element)" 
+                    *ngIf="element.Estado === 'Por aprobar' || element.Estado === 'Por aprobar gerente administrativo'
+                    || element.Estado === 'Por desembolsar'">
+                    Cancelar
+                    </button>
+                    <!-- <button type="button" class="btn btn-primary">Ver solicitud</button> -->
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </mat-card-content>
+</mat-card>
+
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{modalTitulo}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12" style="text-align: center;">
+                {{textoInfo}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-6 offset-3">
+                <button type="button" class="btn btn-success" (click)="Pausar()" *ngIf="tipo === 'Pausar'">Confirmar</button>
+                <button type="button" class="btn btn-success" (click)="Reactivar()" *ngIf="tipo === 'Reactivar'">Confirmar</button>
+                <button type="button" class="btn btn-success" (click)="Cancelar()" *ngIf="tipo === 'Cancelar'">Confirmar</button>
+                <button type="button" class="btn btn-danger" (click)="Salir()">Salir</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
