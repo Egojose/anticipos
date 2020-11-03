@@ -140,6 +140,14 @@ export class ServiciosService {
     return respuesta;
   }
 
+  ConsultarAnticiposSinLegalizar(idUsuario) {
+    let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
+    .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID', 'Solicitante/Title, Solicitante/EMail, Solicitante/ID')
+    .expand('Responsable, Solicitante')
+    .filter("Solicitante eq '"+idUsuario+"' and Legalizado eq 0").getAll();
+    return respuesta;
+  }
+
   ConsultarUsuarioEmpleados(id: number) {
     let respuesta = this.ConfiguracionGH().web.lists.getByTitle(environment.listaEmpleados).items
     .select('*').filter("usuarioId eq '"+ id +"'").getAll();
@@ -152,14 +160,15 @@ export class ServiciosService {
     return respuesta;
   }
 
-  ConsultarAprobadores() {
+  ConsultarAprobadores(empresa) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAprobadores)
     .items.select('*',
       'GerenteAdministrativo/Title, GerenteAdministrativo/EMail, GerenteAdministrativo/ID',
       'Tesorero/Title, Tesorero/EMail, Tesorero/ID',
       'Contador/Title, Contador/EMail, Contador/ID'
     )
-    .expand('GerenteAdministrativo, Tesorero, Contador').getAll();
+    .expand('GerenteAdministrativo, Tesorero, Contador')
+    .filter("Empresa eq '"+empresa+"'").getAll();
     return respuesta;
   }
 

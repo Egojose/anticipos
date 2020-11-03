@@ -1,8 +1,62 @@
-<div id="wrapper" class="animate open">
+
+<header>
+    <div class="row rowHeader">
+        <div class="logo col-md-6">
+            <a href="https://aribasas.sharepoint.com/sites/Intranet"><img src="../assets/images/logo-header.png"></a>
+        </div>
+        <div class="zona-usuario-logueado col-md-6">
+            <div class="usuario text-right">
+                <span class="text-bienvenida">Bienvenido <b>{{nombreUsuario}}</b></span>
+            </div>
+        </div>
+    </div>
+</header>
+<div id="wrapper" class="wrapper-content">
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li>
+                <a class="nav-link" routerLink="/solicitar-anticipo" (click)="enviarDatos()">Solicitar anticipo</a>
+            </li>
+            <li>
+                <a class="nav-link" routerLink="/mis-solicitudes" (click)="enviarDatos()">Mis solcitudes</a>
+            </li>
+            <li>
+                <a class="nav-link" routerLink="/mis-pendientes" (click)="enviarDatos()">Mis pendientes <span class="badge badge-pill badge-warning">{{pendientes.length}}</span></a>
+            </li>
+            <li>
+                <a class="nav-link" routerLink="/consultar-anticipos">Consultar anticipos</a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button class="btn-menu btn btn-primary btn-toggle-menu" type="button">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- <div id="wrapper" class="animate open">
   <nav class="navbar header-top fixed-top navbar-expand-lg navbar-light bgNegro">
       <span class="navbar-toggler-icon leftmenutrigger"></span>
       <a class="navbar-brand">
-          <!-- <img class="Img_logo" src="assets/images/logoSolicitudesDigitales1.png" alt=""> -->
+          <img class="Img_logo" src="assets/images/logoSolicitudesDigitales1.png" alt="">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="true" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -21,21 +75,15 @@
               <li class="nav-item">
                   <a class="nav-link" routerLink="/consultar-anticipos">Consultar anticipos</a>
               </li>
-              <!-- <li class="nav-item">
-                  <a class="nav-link" href="https://grouprayogas.sharepoint.com/sites/Aplicaciones/SiteAssets/Procesos/index.aspx/home">Regresar a Procesos</a>
-              </li> -->
+              
           </ul>
-          <!-- <ul class="navbar-nav ml-md-auto d-md-flex">
-              <li class="nav-item">
-                  <a class="nav-link colorLetra">Bienvenido {{nombreUsuario}}</a>
-              </li>
-          </ul> -->
+         
       </div>
   </nav>
   <div class="container-fluid tipografia espacio">
       <router-outlet></router-outlet>
       <div class="footer"></div>
   </div>
-</div>
+</div> -->
 
 <ngx-spinner></ngx-spinner>

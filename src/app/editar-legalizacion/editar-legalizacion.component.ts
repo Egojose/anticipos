@@ -54,15 +54,17 @@ export class EditarLegalizacionComponent implements OnInit {
   urlFacturas: string;
   idDocumento: number;
   Observaciones: string;
+  empresa: string;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     if(!sessionStorage.getItem('pendiente')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
+    this.empresa = this.pendiente.usuario.Empresa;
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
     console.log(this.pendienteArr);
@@ -125,7 +127,7 @@ export class EditarLegalizacionComponent implements OnInit {
   }
 
   ConsultarContador() {
-    this.Servicio.ConsultarAprobadores().then(
+    this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.contador = respuesta[0].Contador;
         console.log(this.contador)
@@ -338,7 +340,7 @@ export class EditarLegalizacionComponent implements OnInit {
     this.Servicio.ActualizarAnticipo(id, obj).then(
       (respuesta) => {
         this.mostrarInformacion('Se guardó parcialmente la legalización. Puede seguirla editando más tarde.');
-        this.router.navigate(['/home'])
+        this.router.navigate(['/'])
       }
     )
   }
@@ -378,7 +380,7 @@ export class EditarLegalizacionComponent implements OnInit {
         await this.envairNotificacion();
         this.mostrarExitoso('El anticipo se actualizó correctamente');
         sessionStorage.clear();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
@@ -386,7 +388,7 @@ export class EditarLegalizacionComponent implements OnInit {
         console.log(`error al guardar el anticipo ${err}`)
         sessionStorage.clear();
         setTimeout(() => {
-          this.router.navigate(['/home'])
+          this.router.navigate(['/'])
         }, 3000);
       }
     )

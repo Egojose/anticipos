@@ -18,7 +18,7 @@ export class MisPendientesComponent implements OnInit {
 
   ngOnInit(): void {
     if(!sessionStorage.getItem('datosUsuario')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
    this.misPendientes = sessionStorage.getItem('datosUsuario')
