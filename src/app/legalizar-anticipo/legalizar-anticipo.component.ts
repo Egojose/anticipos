@@ -53,6 +53,7 @@ export class LegalizarAnticipoComponent implements OnInit {
   alertarExtension: boolean;
   urlDocumento: string;
   biblioteca = 'DocumentosAnticipos'
+  empresa: string;
   //*******
 
   
@@ -61,9 +62,10 @@ export class LegalizarAnticipoComponent implements OnInit {
 
   ngOnInit(): void {
     if(!sessionStorage.getItem('pendiente')) {
-      this.router.navigate(['/home'])
+      this.router.navigate(['/'])
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
+    this.empresa = this.pendiente.usuario.Empresa
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
     console.log(this.pendienteArr);
@@ -100,7 +102,7 @@ export class LegalizarAnticipoComponent implements OnInit {
   }
 
   ConsultarContador() {
-    this.Servicio.ConsultarAprobadores().then(
+    this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.contador = respuesta[0].Contador;
         console.log(this.contador)
@@ -311,7 +313,7 @@ export class LegalizarAnticipoComponent implements OnInit {
     this.Servicio.ActualizarAnticipo(id, obj).then(
       (respuesta) => {
         this.mostrarInformacion('Se guardó parcialmente la legalización. Puede seguirla editando más tarde.');
-        this.router.navigate(['/home'])
+        this.router.navigate(['/'])
       }
     )
   }
@@ -345,7 +347,7 @@ export class LegalizarAnticipoComponent implements OnInit {
         await this.envairNotificacion();
         this.mostrarExitoso('El anticipo se actualizó correctamente');
         sessionStorage.clear();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
@@ -353,7 +355,7 @@ export class LegalizarAnticipoComponent implements OnInit {
         console.log(`error al guardar el anticipo ${err}`);
         this.spinner.hide();
         sessionStorage.clear();
-        this.router.navigate(['/home'])
+        this.router.navigate(['/'])
       }
     )
   }

@@ -27,7 +27,7 @@ export class MisSolicitudesComponent implements OnInit {
 
   async ngOnInit() {
     if(!sessionStorage.getItem('datosUsuario')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
     this.pendientes = JSON.parse(sessionStorage.getItem('datosUsuario'))
@@ -80,7 +80,7 @@ export class MisSolicitudesComponent implements OnInit {
     let estadoActual = '';
     await this.ActualizarSolicitud(id, estado, idResponsable, estadoActual, pausado, cancelado);
     this.modalRef.hide();
-    this.router.navigate(['/home'])
+    this.router.navigate(['/'])
   }
 
   async Pausar() {
@@ -101,7 +101,7 @@ export class MisSolicitudesComponent implements OnInit {
     console.log(this.solicitud)
     await this.ActualizarSolicitud(id, estado, idResponsable, JSON.stringify(estadoActual, null, 2), pausado, cancelado);
     this.modalRef.hide();
-    this.router.navigate(['/home'])
+    this.router.navigate(['/'])
   }
 
   async Cancelar() {
@@ -116,7 +116,7 @@ export class MisSolicitudesComponent implements OnInit {
     let cancelado = true
     await this.ActualizarSolicitud(id, estado, idResponsable, estadoActual, pausado, cancelado);
     this.modalRef.hide();
-    this.router.navigate(['/home'])
+    this.router.navigate(['/'])
   }
 
   Salir() {

@@ -49,17 +49,18 @@ export class AprobarLegalizacionComponent implements OnInit {
   mostrarBtnConfirmar = false;
   tesorero: any;
   urlFacturas: string;
+  empresa: string;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     if(!sessionStorage.getItem('pendiente')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
-    this.ConsultarTesorero();
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     console.log(this.pendiente);
+    this.empresa = this.pendiente.usuario.Empresa
     this.pendienteArr.push(this.pendiente.pendiente);
     this.Observaciones = this.pendienteArr[0].ComentariosContador
     console.log(this.pendienteArr);
@@ -90,10 +91,11 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
+    this.ConsultarTesorero();
   }
 
   ConsultarTesorero() {
-    this.Servicio.ConsultarAprobadores().then(
+    this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.tesorero = respuesta[0].Tesorero;
         console.log(this.contador)
@@ -149,7 +151,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.envairNotificacion(cuerpo, this.pendienteArr[0].Solicitante.EMail);
         this.mostrarInformacion('El estado se actualizó correctamente.');
         sessionStorage.clear();
-        this.router.navigate(['/home'])
+        this.router.navigate(['/'])
       }
     ).catch(
       (err) => {
@@ -157,7 +159,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         sessionStorage.clear();
         console.log(`rechazar ${err}`);
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         }, 3000);
       }
     )
@@ -213,7 +215,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.envairNotificacion(cuerpo, emailResponsable);
         this.mostrarExitoso('La legalización se aprobó correctamente');
         sessionStorage.clear();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
@@ -221,7 +223,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.spinner.hide();
         sessionStorage.clear();
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         }, 3000);
       }
     )

@@ -19,7 +19,8 @@ export class SolicitarAnticiposComponent implements OnInit {
   columnsDetalle: string[] = ['Tipo', 'Descripcion', 'Cantidad', 'Moneda', 'ValorUnitario', 'ValorTotal', 'Acciones']
   form: FormGroup;
   fecha = new Date();
-  Empresas = []
+  Empresas = [];
+  empresa: any;
   usuarioActual: Object;
   datosString: any;
   datosJson: any;
@@ -41,9 +42,9 @@ export class SolicitarAnticiposComponent implements OnInit {
 
   constructor(public Servicios: ServiciosService, public fb: FormBuilder, public router: Router, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if(!sessionStorage.getItem('datosUsuario')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
     this.form = this.fb.group({
@@ -72,12 +73,13 @@ export class SolicitarAnticiposComponent implements OnInit {
     this.datosJson = JSON.parse(this.datosString);
     console.log(this.datosJson);
     console.log(this.datosJson.usuario);
-    if(this.datosJson.pendientes.length >= 2) this.bloquearSolicitud = true;
+    console.log(this.datosJson.noLegalizados);
+    if(this.datosJson.noLegalizados && this.datosJson.noLegalizados.length >= 2) this.bloquearSolicitud = true;
     this.usuarioActual = this.datosJson.usuario;
+    await this.ObtenerConsecutivo();
     this.ObtenerEmpresas();
     this.ObtenerUnidadNegocios();
     this.ObtenerTipoGasto();
-    this.ObtenerConsecutivo();
     this.ObtenerClientes();
     console.log(this.fecha)
     this.form.controls.Fecha.setValue(this.formatearFecha(this.fecha))
@@ -94,9 +96,12 @@ export class SolicitarAnticiposComponent implements OnInit {
 
   ObtenerEmpresas() {
     this.Servicios.ConsultarEmpresas().then(
-      (respuesta) => {
+      async (respuesta) => {
         this.Empresas = respuesta;
-        console.log(this.Empresas);
+        this.empresa = this.Empresas.filter((x) => x.RazonSocial === this.datosJson.usuario.Empresa)
+        this.form.controls.Empresa.setValue(this.empresa[0].RazonSocial)
+        await this.AsignarConsecutivo(this.empresa[0].RazonSocial)
+        console.log(this.empresa);
       }
     )
   }
@@ -126,8 +131,8 @@ export class SolicitarAnticiposComponent implements OnInit {
     )
   }
 
-  ObtenerConsecutivo() {
-    this.Servicios.ConsultarConsecutivo().then(
+  async ObtenerConsecutivo() {
+    await this.Servicios.ConsultarConsecutivo().then(
       (respuesta) => {
         this.consecutivos = respuesta;
         console.log(this.consecutivos[0]);
@@ -135,10 +140,10 @@ export class SolicitarAnticiposComponent implements OnInit {
     )
   }
 
-  AsignarConsecutivo($event) {
-    console.log($event);
-    if($event === 'Enovel Consultores') this.consecutivo = this.consecutivos[0].ConsecutivoConsultores;
-    if($event === 'Enovel Asociados')this.consecutivo = this.consecutivos[0].ConsecutivoAsociados;
+  async AsignarConsecutivo(empresa: string) {
+    console.log(empresa);
+    if(empresa === 'Enovel Consultores') this.consecutivo = this.consecutivos[0].ConsecutivoConsultores;
+    if(empresa === 'Enovel Asociados')this.consecutivo = this.consecutivos[0].ConsecutivoAsociados;
     this.form.controls.Consecutivo.setValue(this.consecutivo);
     // this.validarConsecutivo(this.form.controls.Consecutivo.value);
   }
@@ -304,6 +309,12 @@ export class SolicitarAnticiposComponent implements OnInit {
     this.detalleAnticipo.data.splice(index, 1);
     this.detalleAnticipo.data = this.detalleAnticipo.data;
     console.log(this.detalleAnticipo.data);
+    let pesos = this.SumarTotales(this.detalleAnticipo.data, 'Peso');
+    let dolar = this.SumarTotales(this.detalleAnticipo.data, 'Dolar');
+    let euro = this.SumarTotales(this.detalleAnticipo.data, 'Euro');
+    this.form.controls.totalPesos.setValue(pesos);
+    this.form.controls.totalDolares.setValue(dolar);
+    this.form.controls.totalEuros.setValue(euro);
   }
 
   async validarConsecutivo(str: string) {
@@ -314,10 +325,10 @@ export class SolicitarAnticiposComponent implements OnInit {
       }
     )
     let consecutivoAcomparar: string;
-    let empresa = this.form.controls.Empresa.value.RazonSocial
+    let empresa = this.form.controls.Empresa.value
     empresa === 'Enovel Consultores' ? consecutivoAcomparar = consecutivos[0].ConsecutivoConsultores : consecutivoAcomparar = consecutivos[0].ConsecutivoAsociados;
     this.form.controls.Consecutivo.setValue(consecutivoAcomparar);
-    let consNumber;
+    let consNumber: string;
     let identificador = (+consecutivoAcomparar.split('-')[1]) + 1;
     if(identificador < 10 && empresa === 'Enovel Consultores') consNumber = `C-0${identificador}`;
     if(identificador < 100 && empresa === 'Enovel Consultores') consNumber = `C-00${identificador}`;
@@ -345,7 +356,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     let Descripcion = this.form.controls.Descripcion.value;
     let SolicitanteId = this.datosJson.usuario.Id;
     let ResponsableId = this.responsable.ID;
-    let Empresa = this.form.controls.Empresa.value.RazonSocial;
+    let Empresa = this.form.controls.Empresa.value;
     let Consecutivo = this.form.controls.Consecutivo.value;
     let Reembolsable = this.mostrarCampos;
     let Cliente = this.form.controls.Cliente.value;
@@ -388,7 +399,7 @@ export class SolicitarAnticiposComponent implements OnInit {
         await this.ActualizarConsecutivo(consecutivo, objConsecutivo, empresa);
         await this.envairNotificacion();
         sessionStorage.clear();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     ).catch(
       (err) => {

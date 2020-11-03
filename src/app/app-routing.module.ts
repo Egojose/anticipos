@@ -13,7 +13,8 @@ import { MisSolicitudesComponent } from './mis-solicitudes/mis-solicitudes.compo
 
 
 const routes: Routes = [
-  {path: 'home', component: AppComponent},
+  {path: '', redirectTo: '/', pathMatch: 'full'},
+  // {path: 'home', component: AppComponent},
   {path: 'solicitar-anticipo', component: SolicitarAnticiposComponent},
   {path: 'mis-pendientes', component: MisPendientesComponent},
   {path: 'aprobar-anticipo', component: AprobarAnticipoComponent},

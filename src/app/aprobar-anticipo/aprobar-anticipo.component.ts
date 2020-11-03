@@ -31,17 +31,18 @@ export class AprobarAnticipoComponent implements OnInit {
   responsable;
   tesorero: any;
   index: number;
-  mostrarBtn = true
+  mostrarBtn = true;
+  empresa: string;
 
   constructor(public Servicio: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService, public router: Router) { }
 
   ngOnInit(): void {
     if(!sessionStorage.getItem('pendiente')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
-    this.ConsultarTesorero();
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
+    this.empresa = this.pendiente.usuario.Empresa;
     this.pendienteArr.push(this.pendiente.pendiente);
     this.usuario = this.pendiente.usuario;
     if(this.pendiente.query) this.mostrarBtn = false;
@@ -59,10 +60,11 @@ export class AprobarAnticipoComponent implements OnInit {
       rol: 'Gerente administrativo y financiero',
     };
     this.pendienteArr[0].Estado === 'Por aprobar gerente administrativo' && this.aprobadores.push(this.gerenteObj);
+    this.ConsultarTesorero();
   }
 
   ConsultarTesorero() {
-    this.Servicio.ConsultarAprobadores().then(
+    this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.tesorero = respuesta[0].Tesorero;
         console.log(this.tesorero)
@@ -158,13 +160,13 @@ export class AprobarAnticipoComponent implements OnInit {
         this.mostrarExitoso('La solicitud se aprobó correctamente');
         await this.envairNotificacion(cuerpo, emailResponsable);
         sessionStorage.clear();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
         this.spinner.hide();
         this.mostrarError('No se pudo actualizar el estado del anticipo. Por favor intente más tarde');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     )
   };
@@ -181,7 +183,7 @@ export class AprobarAnticipoComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['/home'])
+    this.router.navigate(['/'])
   }
 
   mostrarExitoso(mensaje: string) {
