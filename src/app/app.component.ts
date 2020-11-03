@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ServiciosService } from './servcios/servicios.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
+import $ from "jquery";
+
 
 @Component({
   selector: 'app-root',
@@ -17,14 +19,27 @@ export class AppComponent implements OnInit {
   gerenteAdmin;
   errores = 0
   bloquearSolicitud: boolean;
+  empresa: string;
+  anticiposSinLegalizar = [];
+  nombreUsuario: string;
+  status = true;
 
   constructor(public Servicios: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService) {}
 
   ngOnInit() {
     sessionStorage.clear();
+    $(function(){
+      $(".btn-toggle-menu").click(function() {
+          $("#wrapper").toggleClass("toggled");
+      });
+  }) 
     this.ObtenerUsuarioActual();
-    this.ObtenerAprobadores();
+    // this.ObtenerAprobadores();
   };
+
+  clickEvent(){
+    this.status = !this.status;       
+}
 
   ObtenerUsuarioActual() {
     this.spinner.show();
@@ -32,7 +47,9 @@ export class AppComponent implements OnInit {
       async (respuesta) => {
         this.usuarioActual = respuesta;
         console.log(this.usuarioActual);
+        this.nombreUsuario = respuesta.Title;
         await this.ObtnenerAnticiposPendientes();
+        await this.ObtenerAnticiposSinLegalizar();
         await this.ObtenerEmpleado(this.usuarioActual.Id);
         this.spinner.hide();
       }
@@ -63,10 +80,20 @@ export class AppComponent implements OnInit {
     )
   };
 
+  async ObtenerAnticiposSinLegalizar() {
+    await this.Servicios.ConsultarAnticiposSinLegalizar(this.usuarioActual.Id).then(
+      (respuesta) => {
+        this.anticiposSinLegalizar = respuesta
+      }
+    )
+  }
+
   async ObtenerEmpleado(id: number) {
     await this.Servicios.ConsultarUsuarioEmpleados(id).then(
       (respuesta) => {
+        this.empresa = respuesta[0].Empresa
         if(respuesta[0].UrlFirma) this.firma = respuesta[0].UrlFirma.Url;
+        this.ObtenerAprobadores(respuesta[0].Empresa);
       }
     ).catch(
       (err) => {
@@ -78,9 +105,10 @@ export class AppComponent implements OnInit {
     )
   }
 
-  async ObtenerAprobadores() {
-    await this.Servicios.ConsultarAprobadores().then(
+  async ObtenerAprobadores(empresa) {
+    await this.Servicios.ConsultarAprobadores(empresa).then(
       async (respuesta) => {
+        console.log(respuesta);
         await this.ObtenerFirmaGerente(respuesta[0].GerenteAdministrativo.ID);
         this.gerenteAdmin = {
           Title: respuesta[0].GerenteAdministrativo.Title,
@@ -123,12 +151,14 @@ export class AppComponent implements OnInit {
     }
     let datos = {
       pendientes: this.pendientes,
+      noLegalizados: this.anticiposSinLegalizar,
       gerente: this.gerenteAdmin,
       usuario: {
         Id: this.usuarioActual.Id,
         Title: this.usuarioActual.Title,
         EMail: this.usuarioActual.Email,
-        Firma: this.firma
+        Firma: this.firma,
+        Empresa: this.empresa
       }
     }
     sessionStorage.setItem('datosUsuario', JSON.stringify(datos))

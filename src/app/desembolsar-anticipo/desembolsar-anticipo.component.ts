@@ -38,7 +38,7 @@ export class DesembolsarAnticipoComponent implements OnInit {
 
   ngOnInit(): void {
     if(!sessionStorage.getItem('pendiente')) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
@@ -165,14 +165,14 @@ export class DesembolsarAnticipoComponent implements OnInit {
       async (respuesta) => {
         this.mostrarExitoso('El estado del anticipo se actualizó correctamente');
         await this.envairNotificacion();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
         this.spinner.hide();
         console.log(`No se puede actualizar el anticipo  ${err}`);
         this.mostrarError('No se pudo actualizar el estado del anticipo. Por favor intente más tarde');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     )
   }
