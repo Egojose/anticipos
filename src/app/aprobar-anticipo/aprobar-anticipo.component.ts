@@ -42,9 +42,10 @@ export class AprobarAnticipoComponent implements OnInit {
       return;
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
-    this.empresa = this.pendiente.usuario.Empresa;
     this.pendienteArr.push(this.pendiente.pendiente);
     this.usuario = this.pendiente.usuario;
+    this.empresa = this.usuario.Empresa;
+    console.log(this.empresa);
     if(this.pendiente.query) this.mostrarBtn = false;
     this.pendiente.gerente ? this.gerente = this.pendiente.gerente : this.gerente = [];
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
@@ -160,6 +161,7 @@ export class AprobarAnticipoComponent implements OnInit {
         this.mostrarExitoso('La solicitud se aprobó correctamente');
         await this.envairNotificacion(cuerpo, emailResponsable);
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(

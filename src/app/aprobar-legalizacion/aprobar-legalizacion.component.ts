@@ -50,6 +50,7 @@ export class AprobarLegalizacionComponent implements OnInit {
   tesorero: any;
   urlFacturas: string;
   empresa: string;
+  usuario: any;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -60,7 +61,9 @@ export class AprobarLegalizacionComponent implements OnInit {
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     console.log(this.pendiente);
-    this.empresa = this.pendiente.usuario.Empresa
+    this.usuario = this.pendiente.usuario;
+    this.empresa = this.usuario.Empresa
+    console.log(this.empresa);
     this.pendienteArr.push(this.pendiente.pendiente);
     this.Observaciones = this.pendienteArr[0].ComentariosContador
     console.log(this.pendienteArr);
@@ -215,6 +218,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.envairNotificacion(cuerpo, emailResponsable);
         this.mostrarExitoso('La legalización se aprobó correctamente');
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(
