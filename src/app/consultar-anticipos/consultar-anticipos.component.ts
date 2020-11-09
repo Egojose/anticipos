@@ -50,11 +50,21 @@ export class ConsultarAnticiposComponent implements OnInit {
   datosGerente = [];
   ver = faEye;
   verPdf = faFilePdf;
+  datos: any;
+  usuario: any;
 
 
   constructor(public Servicios: ServiciosService, private modalService: BsModalService, public router: Router, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    if(!sessionStorage.getItem('datosUsuario')) {
+      this.router.navigate(['/']);
+      return;
+    }
+    this.datos = JSON.parse(sessionStorage.getItem('datosUsuario'));
+    this.usuario = this.datos.usuario
+    console.log(this.datos);
+    console.log(this.usuario);
     this.ConsultarEmpleados();
     this.ConsultarAnticipos();
   }
@@ -78,7 +88,8 @@ export class ConsultarAnticiposComponent implements OnInit {
   Navegar(element, param: string) {
     let el = {
       pendiente: element,
-      query: param
+      query: param,
+      usuario: this.usuario
     }
     sessionStorage.setItem('pendiente', JSON.stringify(el))
     param === 'Anticipo' && this.router.navigate(['/consultar-anticipo']);

@@ -347,14 +347,15 @@ export class LegalizarAnticipoComponent implements OnInit {
         await this.envairNotificacion();
         this.mostrarExitoso('El anticipo se actualizó correctamente');
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
         this.mostrarError('No se pudo actualizar el anticipo. Por favor intente más tarde');
         console.log(`error al guardar el anticipo ${err}`);
-        this.spinner.hide();
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/'])
       }
     )

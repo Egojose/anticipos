@@ -380,6 +380,7 @@ export class EditarLegalizacionComponent implements OnInit {
         await this.envairNotificacion();
         this.mostrarExitoso('El anticipo se actualizó correctamente');
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(
