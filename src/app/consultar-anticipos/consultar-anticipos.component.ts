@@ -205,7 +205,7 @@ export class ConsultarAnticiposComponent implements OnInit {
   async GenerafPdfLegalizacion() {
     let firmaSolicitante = await new Img(this.dataInicial[0].FirmaSolicitante).width(250).margin([0, 0, 0, 0]).build();
     let firmaDirector = await new Img(this.arrayAprobadores[0].Director.Firma).width(250).margin([0, 0, 0, 0]).build();
-    let logo = await new Img('../../assets/images/logoAraujo.png').width(200).margin([0, 0, 0, 0]).build();
+    let logo = await new Img('../assets/images/logoAraujo.png').width(200).margin([0, 0, 0, 0]).build();
     let version = '1.0'
     console.log(2)
     const pdf = new PdfMakeWrapper();
