@@ -399,6 +399,7 @@ export class SolicitarAnticiposComponent implements OnInit {
         await this.ActualizarConsecutivo(consecutivo, objConsecutivo, empresa);
         await this.envairNotificacion();
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(

@@ -165,6 +165,7 @@ export class DesembolsarAnticipoComponent implements OnInit {
       async (respuesta) => {
         this.mostrarExitoso('El estado del anticipo se actualizó correctamente');
         await this.envairNotificacion();
+        this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(

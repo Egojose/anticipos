@@ -57,10 +57,10 @@
                     <div class="col" style="padding-top: 15px;">
                         <mat-radio-group aria-label="Select an option" formControlName="TipoSolicitud">
                             <mat-radio-button value="Anticipo">Anticipo</mat-radio-button>
-                            <mat-radio-button value="Reembolso" style="margin-left: 8px;">Reembolso</mat-radio-button>
+                            <mat-radio-button value="Reembolso" style="margin-left: 8px;">Reintegro</mat-radio-button>
                         </mat-radio-group>
                     </div>
-                    <label for="staticEmail" class="col-sm-2 col-form-label" id="reembolsable">Reembolsable</label>
+                    <label for="staticEmail" class="col-sm-2 col-form-label" id="reembolsable" *ngIf="!mostrarCampos">Cliente</label>
                     <div class="col" id="radio">
                         <mat-radio-group aria-label="Select an option" formControlName="Reembolsable" (change)="mostrarCliente($event.value)">
                             <mat-radio-button value="true" style="margin-right: 14px;">SI</mat-radio-button>
