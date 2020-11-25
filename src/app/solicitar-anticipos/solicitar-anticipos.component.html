@@ -11,15 +11,15 @@
                 <div class="row">
                     <div class="col">
                         <mat-form-field class="full-width">
-                            <!-- <mat-select placeholder="Empresa" formControlName="Empresa" (selectionChange)="AsignarConsecutivo($event.value.RazonSocial)">
+                            <mat-select placeholder="Empresa" formControlName="Empresa" (selectionChange)="AsignarConsecutivo($event.value.RazonSocial)">
                                 <mat-option *ngFor="let empresa of Empresas" [value]="empresa">
                                     {{empresa.RazonSocial}}
                                 </mat-option>
-                            </mat-select> -->
-                            <input matInput placeholder="Empresa" formControlName="Empresa" readonly>
+                            </mat-select>
+                            <!-- <input matInput placeholder="Empresa" formControlName="Empresa" readonly> -->
                         </mat-form-field>
                     </div>
-                    <div class="col">
+                    <!-- <div class="col">
                         <mat-form-field class="full-width">
                             <input matInput placeholder="Fecha de solicitud" formControlName="Fecha" readonly>
                         </mat-form-field>
@@ -28,7 +28,7 @@
                         <mat-form-field class="full-width">
                             <input matInput placeholder="Consecutivo" formControlName="Consecutivo" readonly>
                         </mat-form-field>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <div class="col">
@@ -43,7 +43,7 @@
                     </div>
                     <div class="col">
                         <mat-form-field class="full-width">
-                            <mat-label>Fecha de finalización</mat-label>
+                            <mat-label>Fecha de finalización de la actividad</mat-label>
                             <input matInput [matDatepicker]="picker" formControlName="fechaFinalizacion">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
@@ -60,7 +60,7 @@
                             <mat-radio-button value="Reembolso" style="margin-left: 8px;">Reintegro</mat-radio-button>
                         </mat-radio-group>
                     </div>
-                    <label for="staticEmail" class="col-sm-2 col-form-label" id="reembolsable" *ngIf="!mostrarCampos">Cliente</label>
+                    <label for="staticEmail" class="col-sm-2 col-form-label" id="reembolsable" *ngIf="!mostrarCampos">Reembolsable por cliente</label>
                     <div class="col" id="radio">
                         <mat-radio-group aria-label="Select an option" formControlName="Reembolsable" (change)="mostrarCliente($event.value)">
                             <mat-radio-button value="true" style="margin-right: 14px;">SI</mat-radio-button>
@@ -287,6 +287,22 @@
                             <input matInput  formControlName="totalEuros" currencyMask readonly class="total"> 
                         </mat-form-field>
                     </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <div class="col">
+                        <mat-checkbox class="example-margin" (change)="AutorizarDescuento($event.checked)" ><span *ngIf="!mostrarTexto"><b>AUTORIZAR DESCUENTO</b></span></mat-checkbox>
+                        <p *ngIf="mostrarTexto"><b>AUTORIZACION DE DESCUENTO:</b>
+                            Si no he presentado la legalizacion del reporte de gastos
+                            anexando los soportes de facturas, los tiquetes y la orden de alojamiento respectiva,
+                            en la fecha establecida por tesorería, autorizo a 
+                            <b>ARAUJO IBARRA CONSULTORES INTERNACIONALES S.A.S.</b> para
+                            <b>descontar de mi salario mensual y/o en el caso de retiro,
+                            de mis prestaciones sociales, el saldo que por este concepto adeude.</b>
+                            La presente autorizacion, cumple con las condiciones exigidas por el articulo 149
+                            del codigo sustantivo de trabajo, modificado por el articulo 18 de la Ley 1429 de 2010,
+                            y siguientes.</p>
+                      </div>
                   </div>
                   <hr>
                   <div class="row">
