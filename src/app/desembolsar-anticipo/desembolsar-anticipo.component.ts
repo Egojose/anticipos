@@ -33,6 +33,7 @@ export class DesembolsarAnticipoComponent implements OnInit {
   detalleDesembolso = [];
   extensionArchivo: any;
   alertarExtension: boolean;
+  tipoSolicitud: string; 
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -45,6 +46,7 @@ export class DesembolsarAnticipoComponent implements OnInit {
     console.log(this.pendiente.pendiente)
     this.anticipo.push(this.pendiente.pendiente);
     this.detalleAnticipo = JSON.parse(this.anticipo[0].DetalleAnticipo)
+    this.tipoSolicitud = this.anticipo[0].TipoSolicitud;
     console.log(this.anticipo);
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
@@ -180,7 +182,7 @@ export class DesembolsarAnticipoComponent implements OnInit {
 
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
-    '<p>Se ha hecho el desembolso del anticipo que solicitó.</p>' + '<br>' +
+    '<p>Se ha hecho el desembolso del '+this.tipoSolicitud+' que solicitó.</p>' + '<br>' +
     '<p>Por favor recuerde que tiene 5 días hábilies después del ' + this.formatearFecha(new Date(this.anticipo[0].FechaFinalizacion)) + ' para hacer la legalización.</p>' + '<br>' +
     'Para ver sus actividades pendientes haga click <a href="http://localhost:4200/mis-pendientes">aquí</a>'
 
