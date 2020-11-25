@@ -49,10 +49,14 @@ table {
     background-color:red;
     } */
 
-.resumen .mat-row:nth-child(even){
+.resumen .mat-row:nth-child(odd){
     background-color:lightgray;
     }
 
 .rojo {
     color: red;
-}    
+}
+
+mat-radio-button {
+    margin-left: 10px;
+}
