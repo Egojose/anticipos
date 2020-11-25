@@ -39,6 +39,8 @@ export class SolicitarAnticiposComponent implements OnInit {
   clientes = [];
   nroJob = [];
   bloquearSolicitud: boolean;
+  mostrarTexto: boolean;
+  tipoSolicitud: string;
 
   constructor(public Servicios: ServiciosService, public fb: FormBuilder, public router: Router, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -99,8 +101,8 @@ export class SolicitarAnticiposComponent implements OnInit {
       async (respuesta) => {
         this.Empresas = respuesta;
         this.empresa = this.Empresas.filter((x) => x.RazonSocial === this.datosJson.usuario.Empresa)
-        this.form.controls.Empresa.setValue(this.empresa[0].RazonSocial)
-        await this.AsignarConsecutivo(this.empresa[0].RazonSocial)
+        // this.form.controls.Empresa.setValue(this.empresa[0].RazonSocial)
+        // await this.AsignarConsecutivo(this.empresa[0].RazonSocial)
         console.log(this.empresa);
       }
     )
@@ -305,7 +307,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     console.log(this.sumaTotal);
   }
   
-  EliminarDetalle(index) {
+  EliminarDetalle(index: number) {
     this.detalleAnticipo.data.splice(index, 1);
     this.detalleAnticipo.data = this.detalleAnticipo.data;
     console.log(this.detalleAnticipo.data);
@@ -337,10 +339,15 @@ export class SolicitarAnticiposComponent implements OnInit {
     this.nuevoConsecutivo = consNumber;
   }
 
+  AutorizarDescuento($event: boolean) {
+    this.mostrarTexto = $event 
+  }
+
   async GuardarAnticipo() {
     this.spinner.show()
     await this.validarConsecutivo(this.form.controls.Consecutivo.value);
     let contador = 0
+    this.validar(!this.mostrarTexto, 'Debe autorizar el descuento para continuar') && contador++;
     this.validar(this.form.invalid, 'Hay campos requeridos sin diligenciar') && contador++;
     this.validar((this.usuariosAprobadores.length === 0), 'Debe seleccionar al menos un aprobador') && contador++;
     this.validar((this.sumaTotal !== 100), 'Revise el porcentaje de los aprobadores. Recuerde que debe ser igual a 100') && contador++;
@@ -356,7 +363,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     let Descripcion = this.form.controls.Descripcion.value;
     let SolicitanteId = this.datosJson.usuario.Id;
     let ResponsableId = this.responsable.ID;
-    let Empresa = this.form.controls.Empresa.value;
+    let Empresa = this.form.controls.Empresa.value.RazonSocial;
     let Consecutivo = this.form.controls.Consecutivo.value;
     let Reembolsable = this.mostrarCampos;
     let Cliente = this.form.controls.Cliente.value;
@@ -367,6 +374,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     let Aprobadores = JSON.stringify(this.usuariosAprobadores);
     let FechaFinalizacion = this.form.controls.fechaFinalizacion.value;
     let FirmaSolicitante = this.datosJson.usuario.Firma
+    this.tipoSolicitud = this.form.controls.TipoSolicitud.value;
 
     let obj = {
       Title,
@@ -413,7 +421,7 @@ export class SolicitarAnticiposComponent implements OnInit {
 
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
-    'El usuario <b>' + this.datosJson.usuario.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
+    'El usuario <b>' + this.datosJson.usuario.Title + '</b> ha solicitado un '+this.tipoSolicitud+' el cual requiere de su aprobación' + '<br>' +
     'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
 
     let emailProps: IEmailProperties = {
@@ -428,7 +436,7 @@ export class SolicitarAnticiposComponent implements OnInit {
   async ActualizarConsecutivo(id: number, obj: Object, empresa: string) {
     await this.Servicios.ActualizarConsecutivo(id, obj).then(
       (respuesta) => {
-        this.mostrarInformacion(`se actualizó el consecutivo de ${empresa}`)
+        // this.mostrarInformacion(`se actualizó el consecutivo de ${empresa}`)
       }
     ).catch(
       (err) => {

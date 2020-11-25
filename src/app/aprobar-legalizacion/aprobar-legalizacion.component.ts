@@ -5,6 +5,7 @@ import { ServiciosService } from '../servcios/servicios.service';
 import { IEmailProperties } from '@pnp/sp/sputilities';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-aprobar-legalizacion',
@@ -16,6 +17,7 @@ export class AprobarLegalizacionComponent implements OnInit {
   columnsLegalizacion: string[] = ['Tipo', 'Descripcion', 'Beneficiario', 'Moneda', 'ValorTotal', 'Origen', 'Destino', 'FechaInicio', 'FechaFin']
   displayedUnidades: string[] = ['Director', 'Ceco', 'Porcentaje'];
   displayedResumen: string[] = ['Detalle', 'Concepto', 'Pesos', 'Dolares', 'Euros'];
+  displayedResumen1: string[] = ['Detalle','Pesos', 'Dolares', 'Euros'];
   pendiente: any;
   pendienteArr = [];
   detalleUnidades = [];
@@ -51,6 +53,20 @@ export class AprobarLegalizacionComponent implements OnInit {
   urlFacturas: string;
   empresa: string;
   usuario: any;
+  mostrarMovimiento: boolean;
+  FormaPago;
+  Entidad: string;
+  numeroTransaccion: string;
+  solicitante: string;
+  fechaEntrega;
+  Comentarios: string;
+  archivo: any;
+  nombreArchivo: string;
+  extensionArchivo: any;
+  alertarExtension: boolean;
+  biblioteca = 'DocumentosAnticipos';
+  urlDocumento: string;
+  tipoSolicitud: string;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -62,7 +78,9 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     console.log(this.pendiente);
     this.usuario = this.pendiente.usuario;
-    this.empresa = this.usuario.Empresa
+    this.empresa = this.pendiente.pendiente.Empresa;
+    this.solicitante = this.pendiente.pendiente.Solicitante.Title
+    this.tipoSolicitud = this.pendiente.pendiente.TipoSolicitud
     console.log(this.empresa);
     this.pendienteArr.push(this.pendiente.pendiente);
     this.Observaciones = this.pendienteArr[0].ComentariosContador
@@ -78,12 +96,13 @@ export class AprobarLegalizacionComponent implements OnInit {
     if(arrDetalle[0].urlFacturas) this.urlFacturas = arrDetalle[0].urlFacturas
     console.log(arrDetalle);
     let arrResumen = arrDetalle[0].resumen;
-    console.log(arrResumen);
-    arrResumen.forEach((x) => {
-      this.resumenCuentas.push(x);
-    })
-    console.log(arrDetalle);
-    console.log(arrDetalle[0])
+    let arrResumenGastos = arrResumen.filter((x) => {
+      return x.tipo === 'Gastos'
+    });
+    // let arrResumenSaldos = arrResumen.filter((x) => {
+    //   return x.tipo === 'Saldo'
+    // })
+    
     arrDetalle[0].detalle.forEach((x) => {
       this.detalleLegalizacion.push(x);
     })
@@ -94,6 +113,37 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
+    let totalPesosGasto = this.sumarResumenPeso(arrResumenGastos);
+    let totalDolarGasto = this.sumarResumenDolar(arrResumenGastos);
+    let totalEuroGasto = this.sumarResumenEuro(arrResumenGastos);
+    let totalPesoSaldo = (+this.totalPesos) - (+totalPesosGasto);
+    let totalDolarSaldo = (+this.totalDolares) - (+totalDolarGasto);
+    let totalEuroSaldo = (+this.totalEuros) - (+totalEuroGasto);
+    if((totalPesoSaldo !== 0 || totalDolarSaldo !== 0 || totalEuroSaldo !== 0) && this.pendiente.pendiente.Estado === 'Por confirmar') {
+      this.mostrarMovimiento = true;
+    }
+    let objAnticipo = {
+      tipo: 'Anticipo',
+      peso: this.totalPesos,
+      dolar: this.totalDolares,
+      euro: this.totalEuros
+    }
+    this.resumenCuentas.push(objAnticipo)
+    let objGastos = {
+      tipo: 'Gastos',
+      peso: totalPesosGasto,
+      dolar: totalDolarGasto,
+      euro: totalEuroGasto
+    }
+    this.resumenCuentas.push(objGastos);
+    let objSaldo = {
+      tipo: 'Saldo',
+      peso: totalPesoSaldo,
+      dolar: totalDolarSaldo,
+      euro: totalEuroSaldo
+    }
+    this.resumenCuentas.push(objSaldo)
+    this.resumen.data = this.resumenCuentas;
     this.ConsultarTesorero();
   }
 
@@ -101,9 +151,33 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.tesorero = respuesta[0].Tesorero;
-        console.log(this.contador)
+        console.log(this.tesorero)
       }
     )
+  }
+
+  sumarResumenPeso (arr) {
+    let suma = 0;
+    arr.forEach((x) => {
+      suma = x.Peso + suma
+    });
+    return suma;
+  }
+
+  sumarResumenDolar (arr) {
+    let suma = 0;
+    arr.forEach((x) => {
+      suma = x.Dolar + suma
+    });
+    return suma;
+  }
+
+  sumarResumenEuro (arr) {
+    let suma = 0;
+    arr.forEach((x) => {
+      suma = x.Euro + suma
+    });
+    return suma;
   }
 
   SumarTotales(arr, moneda: string) {
@@ -118,6 +192,40 @@ export class AprobarLegalizacionComponent implements OnInit {
       suma = suma + valor
     }
     return suma;
+  }
+
+  AdjuntarSoporte($event) {
+    console.log($event.target.files[0]);
+    this.archivo = $event.target.files[0];
+    this.nombreArchivo = $event.target.files[0].name;
+    this.extensionArchivo = this.nombreArchivo.split('.')[1]
+    this.validar(
+      this.extensionArchivo !== 'pdf'
+      && this.extensionArchivo !== 'doc'
+      && this.extensionArchivo !== 'docx'
+      && this.extensionArchivo !== 'eml' 
+      && this.extensionArchivo !== 'jpg', 
+      'El formato del archivo no es válido. Por favor revise'
+      ) ? this.alertarExtension = true : this.alertarExtension = false;
+    console.log(this.extensionArchivo)
+  }
+
+  async GuardarArchivo() {
+    await this.Servicio.AgregarDocumentos(this.biblioteca, this.GenerarIdentificador() + '--' + this.nombreArchivo, this.archivo).then(
+      async f => {
+        await f.file.getItem().then(item => {
+          let urlRaiz = environment.urlRaiz
+          this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
+          console.log(item)
+        })
+      }
+    )
+  }
+
+  GenerarIdentificador(): string {
+    let fecha = new Date();
+    let valorprimitivo = fecha.valueOf().toString();
+    return valorprimitivo;
   }
 
   validar(condicion: boolean, mensaje: string) {
@@ -136,7 +244,7 @@ export class AprobarLegalizacionComponent implements OnInit {
       return false
     }
     let cuerpo = '<p>Hola</p>' + '<br>' +
-    'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha rechazado la legalización del anticipo y es necesario que haga algunas modificaciones' + '<br>' +
+    'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha rechazado la legalización del ' + this.tipoSolicitud + ' y es necesario que haga algunas modificaciones' + '<br>' +
     'El motivo del rechazo es <b>' + this.Observaciones + '</b><br>' +
     'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
 
@@ -168,7 +276,7 @@ export class AprobarLegalizacionComponent implements OnInit {
     )
   }
 
-  Aprobar() {
+  async Aprobar() {
     this.spinner.show();
     let counter = 0
     let Estado: string;
@@ -190,7 +298,7 @@ export class AprobarLegalizacionComponent implements OnInit {
       ComentariosContador = this.Observaciones;
       emailResponsable = this.tesorero.EMail
       cuerpo = '<p>Hola</p>' + '<br>' +
-        'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha aprobado la legalización del anticipo ' + '<br>' +
+        'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha aprobado la legalización del ' +this.tipoSolicitud+'<br>' +
         'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       obj = {
         Estado,
@@ -199,20 +307,44 @@ export class AprobarLegalizacionComponent implements OnInit {
       }
     }
     if(this.pendienteArr[0].Estado === 'Por confirmar') {
+      let DetalleCierre = '';
+      if(this.mostrarMovimiento) {
+        
+        this.validar(!this.Entidad || !this.numeroTransaccion || !this.solicitante 
+          || !this.fechaEntrega || !this.Comentarios, 'Debe registrar todos los datos del movimiento de dinero') && counter++;
+        if(counter > 0) {
+          this.spinner.hide();
+          return false;
+        } else {
+          await this.GuardarArchivo();
+          let objCierre = {
+            entidad: this.Entidad,
+            numero_transaccion: this.numeroTransaccion,
+            solicitante: this.solicitante,
+            fecha_entrega: this.fechaEntrega,
+            comentarios: this.Comentarios,
+            url_documento: this.urlDocumento
+          }
+          DetalleCierre = JSON.stringify(objCierre);
+        }
+
+      }
+      
       Estado = 'Aprobado',
       ResponsableId = null,
       emailResponsable = this.pendienteArr[0].Solicitante.EMail
       cuerpo = '<p>Hola</p>' + '<br>' +
-        'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha confirmado y cerrado la legalización del anticipo ' + '<br>' +
+        'El usuario <b>' + this.pendienteArr[0].Responsable.Title + '</b> ha confirmado y cerrado la legalización del ' +this.tipoSolicitud+ '<br>' +
         'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       obj = {
         Estado,
         ResponsableId,
         Legalizado: true,
-        FechaLegalizacion: new Date()
+        FechaLegalizacion: new Date(),
+        DetalleCierre
       }
     }
-
+  
     this.Servicio.ActualizarAnticipo(id, obj).then(
       (respuesta) => {
         this.envairNotificacion(cuerpo, emailResponsable);

@@ -392,6 +392,13 @@
     <mat-card-content>
         <div class="row">
             <div class="col">
+                <mat-checkbox class="example-margin" (change)="disclaimer($event.checked)" ><span *ngIf="!mostrarTexto"><b>DECLARACIÓN DE NO CONTRAPRESTACIÓN DE SERVICIO</b></span></mat-checkbox>
+                <p *ngIf="mostrarTexto">
+                Declaro que la totalidad de los gastos incluidos en este reporte <b>no fueron recibidos
+                a título de contraprestación de servicio</b>; por lo tanto, <b>no constituyen salario.</b>
+                </p>
+            </div>
+            <div class="col">
                 <input type="file" (change)="AdjuntarSoporte($event)">
                 <span *ngIf="alertarExtension"  style="color: red" class="alerta">
                    formatos permitidos: jpg, pdf, eml, doc, docx

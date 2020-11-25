@@ -54,6 +54,8 @@ export class LegalizarAnticipoComponent implements OnInit {
   urlDocumento: string;
   biblioteca = 'DocumentosAnticipos'
   empresa: string;
+  mostrarTexto: boolean;
+  tipoSolicitud: string;
   //*******
 
   
@@ -65,9 +67,11 @@ export class LegalizarAnticipoComponent implements OnInit {
       this.router.navigate(['/'])
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
-    this.empresa = this.pendiente.usuario.Empresa
+    // this.empresa = this.pendiente.usuario.Empresa
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
+    this.empresa = this.pendienteArr[0].Empresa
+    this.tipoSolicitud = this.pendienteArr[0].TipoSolicitud;
     console.log(this.pendienteArr);
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
@@ -298,6 +302,10 @@ export class LegalizarAnticipoComponent implements OnInit {
     var valorprimitivo = fecha.valueOf().toString();
     return valorprimitivo;
   }
+  
+  disclaimer($event: boolean) {
+    this.mostrarTexto = $event 
+  }
 
 
   async GuardadoParcial() {
@@ -324,6 +332,7 @@ export class LegalizarAnticipoComponent implements OnInit {
     this.validar(this.detalleLegalizacion.length === 0, 'Revise el detalle  de legalización. Parece no contener datos') && counter++;
     this.validar(this.resumenCuentas.length === 0, 'Revise el resumen de las cuentas. Parece no contener datos') && counter++;
     this.validar(!this.archivo, 'Debe adjuntar el archivo con las facturas') && counter++;
+    this.validar(!this.mostrarTexto, 'Debe hacer la declaración de no contraprestación de servicio') && counter++;
     if(counter > 0) {
       this.spinner.hide();
       return false;
@@ -345,14 +354,14 @@ export class LegalizarAnticipoComponent implements OnInit {
     await this.Servicio.ActualizarAnticipo(id, obj).then(
       async (respuesta) => {
         await this.envairNotificacion();
-        this.mostrarExitoso('El anticipo se actualizó correctamente');
+        this.mostrarExitoso(`El ${this.tipoSolicitud} se actualizó correctamente`);
         sessionStorage.clear();
         this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
-        this.mostrarError('No se pudo actualizar el anticipo. Por favor intente más tarde');
+        this.mostrarError(`No se pudo actualizar el ${this.tipoSolicitud}. Por favor intente más tarde`);
         console.log(`error al guardar el anticipo ${err}`);
         sessionStorage.clear();
         this.spinner.hide();
@@ -363,7 +372,7 @@ export class LegalizarAnticipoComponent implements OnInit {
 
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
-    'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha legalizado un anticipo el cual requiere de su aprobación' + '<br>' +
+    'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha legalizado un '+this.tipoSolicitud+' el cual requiere de su aprobación' + '<br>' +
     'Para ver sus actividades pendientes haga click <a href="https://enovelsoluciones.sharepoint.com/sites/AplicacionesAraujo/SiteAssets/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     let emailProps: IEmailProperties = {
       To: [this.contador.EMail],
