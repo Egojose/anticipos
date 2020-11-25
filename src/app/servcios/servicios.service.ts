@@ -87,18 +87,18 @@ export class ServiciosService {
     return respuesta;
   }
 
-  ActualizarConsecutivo(id, obj) {
+  ActualizarConsecutivo(id: number, obj: Object) {
     let respuesta = this.Configuracion().web.lists
     .getByTitle(environment.listaConfiguarcion).items.getById(id).update(obj);
     return respuesta;
   }
 
-  GuardarAnticipo(obj) {
+  GuardarAnticipo(obj: Object) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items.add(obj);
     return respuesta;
   }
 
-  ConsultarAnticipos(id) {
+  ConsultarAnticipos(id: number) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
     .select('*', 'Responsable/Title, Responsable/ID, Responsable/EMail').expand('Reponsable')
     .filter("ID eq '" + id + "'");
@@ -118,7 +118,7 @@ export class ServiciosService {
     return respuesta;
   }
 
-  ConsultarTodosAnticiposXusuraio(id) {
+  ConsultarTodosAnticiposXusuraio(id: number) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
     .select('*', 'Solicitante/Title, Solicitante/EMail, Solicitante/Id', 'Responsable/Title, Responsable/EMail, Responsable/Id')
     .expand('Solicitante', 'Responsable')
@@ -132,7 +132,7 @@ export class ServiciosService {
     return respuesta;
   }
 
-  ConsultarPendientes(idUsuario) {
+  ConsultarPendientes(idUsuario: number) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
     .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID', 'Solicitante/Title, Solicitante/EMail, Solicitante/ID')
     .expand('Responsable, Solicitante')
@@ -140,7 +140,7 @@ export class ServiciosService {
     return respuesta;
   }
 
-  ConsultarAnticiposSinLegalizar(idUsuario) {
+  ConsultarAnticiposSinLegalizar(idUsuario: number) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAnticipos).items
     .select('*', 'Responsable/Title, Responsable/EMail, Responsable/ID', 'Solicitante/Title, Solicitante/EMail, Solicitante/ID')
     .expand('Responsable, Solicitante')
@@ -160,7 +160,7 @@ export class ServiciosService {
     return respuesta;
   }
 
-  ConsultarAprobadores(empresa) {
+  ConsultarAprobadores(empresa: string) {
     let respuesta = this.Configuracion().web.lists.getByTitle(environment.listaAprobadores)
     .items.select('*',
       'GerenteAdministrativo/Title, GerenteAdministrativo/EMail, GerenteAdministrativo/ID',
@@ -183,7 +183,7 @@ export class ServiciosService {
     return respuesta;
   }
 
-  async AgregarDocumentos(biblioteca, nombre, archivo: File): Promise<any> {
+  async AgregarDocumentos(biblioteca: string, nombre: string, archivo: File): Promise<any> {
     const respuesta = await this.Configuracion()
       .web.getFolderByServerRelativeUrl(biblioteca)
       .files.add(nombre, archivo);
