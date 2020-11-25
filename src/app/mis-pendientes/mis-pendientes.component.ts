@@ -12,7 +12,6 @@ export class MisPendientesComponent implements OnInit {
   pendientes;
   pendientesJson = []
   usuario = [];
-  gerente = [];
 
   constructor(public router: Router) { }
 
@@ -25,7 +24,7 @@ export class MisPendientesComponent implements OnInit {
    this.pendientes = JSON.parse(this.misPendientes);
    this.pendientesJson = this.pendientes.pendientes
    this.usuario.push(this.pendientes.usuario);
-   this.gerente.push(this.pendientes.gerente);
+  //  this.gerente.push(this.pendientes.gerente);
    console.log(this.pendientesJson);
    console.log(this.usuario);
   }
@@ -35,7 +34,7 @@ export class MisPendientesComponent implements OnInit {
     let el = {
       pendiente: element,
       usuario: this.pendientes.usuario,
-      gerente: this.gerente
+      // gerente: this.gerente
     }
     this.EnviarElemento(el)
     if(element.Estado === 'Por aprobar' || element.Estado === 'Por aprobar gerente administrativo') this.router.navigate(['/aprobar-anticipo']);
@@ -43,7 +42,7 @@ export class MisPendientesComponent implements OnInit {
     element.Estado === 'Por legalizar' && this.router.navigate(['/legalizar-anticipo']);
     (element.Estado === 'Guardado parcial' || element.Estado === 'Rechazado') && this.router.navigate(['/editar-legalizacion']);
     element.Estado === 'Por aprobar legalización' && this.router.navigate(['/aprobar-legalizacion']);
-    element.Estado === 'Por confirmar' && this.router.navigate(['/aprobar-legalizacion']);
+    element.Estado === 'Por confirmar' && this.router.navigate(['/confirmar-cerrar-anticipo']);
   }
 
   EnviarElemento(element) {
