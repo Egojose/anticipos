@@ -56,6 +56,7 @@ export class LegalizarAnticipoComponent implements OnInit {
   empresa: string;
   mostrarTexto: boolean;
   tipoSolicitud: string;
+  declaracion: string;
   //*******
 
   
@@ -81,6 +82,7 @@ export class LegalizarAnticipoComponent implements OnInit {
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
     this.ObtenerTipoGasto();
     this.ConsultarContador();
+    this.consultarDeclaracion();
   }
 
   SumarTotales(arr, moneda: string) {
@@ -125,6 +127,14 @@ export class LegalizarAnticipoComponent implements OnInit {
       this.fechaInicio = 'N/A';
       this.fechaFin = 'N/A'
     }
+  }
+
+  consultarDeclaracion() {
+    this.Servicio.ConsultarConsecutivo().then(
+      (respuesta) => {
+        this.declaracion = respuesta[0].TextoNoContraprestacion
+      }
+    )
   }
 
   AsignarSaldoAfavor(saldo: number, saldoAfavor: string, empresa: string, solicitante: string) {
@@ -340,12 +350,14 @@ export class LegalizarAnticipoComponent implements OnInit {
     await this.GuardarArchivo();
     this.arrayDetalleLegalizacion.push(this.detalleItemsLegalizacion);
     let ResponsableId = this.contador.ID;
-    let id = this.pendienteArr[0].ID
+    let id = this.pendienteArr[0].ID;
+    let DeclaracionNoConstituyeSalario = this.declaracion;
     let obj = {
       DetalleLegalizacion: JSON.stringify(this.arrayDetalleLegalizacion),
       Estado: 'Por aprobar legalización',
       ResponsableId,
-      UrlFacturas: this.urlDocumento
+      UrlFacturas: this.urlDocumento,
+      DeclaracionNoConstituyeSalario,
     }
     await this.Guardar(id, obj);
   }
