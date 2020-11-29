@@ -55,6 +55,7 @@ export class EditarLegalizacionComponent implements OnInit {
   idDocumento: number;
   Observaciones: string;
   empresa: string;
+  tipoSolicitud: string;
 
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -64,9 +65,11 @@ export class EditarLegalizacionComponent implements OnInit {
       return;
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
-    this.empresa = this.pendiente.usuario.Empresa;
+    // this.empresa = this.pendiente.usuario.Empresa;
     console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
+    this.empresa = this.pendienteArr[0].Empresa;
+    this.tipoSolicitud = this.pendienteArr[0].TipoSolicitud;
     console.log(this.pendienteArr);
     this.Observaciones = this.pendienteArr[0].ComentariosContador;
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
@@ -293,6 +296,7 @@ export class EditarLegalizacionComponent implements OnInit {
       && this.extensionArchivo !== 'jpg', 
       'El formato del archivo no es válido. Por favor revise'
       ) ? this.alertarExtension = true : this.alertarExtension = false;
+      this.urlFacturas = undefined;
   }
 
   async GuardarArchivo() {
@@ -378,14 +382,14 @@ export class EditarLegalizacionComponent implements OnInit {
     await this.Servicio.ActualizarAnticipo(id, obj).then(
       async (respuesta) => {
         await this.envairNotificacion();
-        this.mostrarExitoso('El anticipo se actualizó correctamente');
+        this.mostrarExitoso(`El ${this.tipoSolicitud} se actualizó correctamente`);
         sessionStorage.clear();
         this.spinner.hide();
         this.router.navigate(['/']);
       }
     ).catch(
       (err) => {
-        this.mostrarError('No se pudo actualizar el anticipo. Por favor intente más tarde');
+        this.mostrarError(`No se pudo actulizar el ${this.tipoSolicitud}. Por favor intente más tarde`);
         console.log(`error al guardar el anticipo ${err}`)
         sessionStorage.clear();
         setTimeout(() => {
@@ -397,7 +401,7 @@ export class EditarLegalizacionComponent implements OnInit {
 
   async envairNotificacion() {
     let cuerpo = '<p>Hola</p>' + '<br>' +
-    'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha legalizado un anticipo el cual requiere de su aprobación' + '<br>' +
+    'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha legalizado un '+this.tipoSolicitud+' el cual requiere de su aprobación' + '<br>' +
     'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     let emailProps: IEmailProperties = {
       To: [this.contador.EMail],

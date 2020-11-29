@@ -1,57 +1,5 @@
-<!-- <mat-card class="shipping-card">
-    <mat-card-header>
-        <mat-card-title>
-            Buscar solicitudes de anticipos
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <br>
-        <div class="row">
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <mat-label>Fecha desde</mat-label>
-                    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaDesde">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <mat-label>Fecha hasta</mat-label>
-                    <input matInput [matDatepicker]="picker1" [(ngModel)]="fechaHasta">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <mat-select placeholder="Solicitante" [(ngModel)]="solicitante">
-                        <mat-option *ngFor="let solicitante of solicitantes" [value]="solicitante.usuario.Id">
-                            {{solicitante.usuario.Title}}
-                        </mat-option>
-                    </mat-select>
-                    <input matInput placeholder="Solicitante"> 
-                </mat-form-field>
-            </div>
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <mat-select placeholder="Estado" [(ngModel)]="estado">
-                        <mat-option *ngFor="let estado of estados" [value]="estado">
-                            {{estado}}
-                        </mat-option>
-                    </mat-select>
-                    <input matInput placeholder="Solicitante"> 
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4 offset-4">
-                <button type="button" class="btn btn-primary btn-block" (click)="ConsultarAnticipos()">Buscar</button>
-            </div>
-        </div>
-    </mat-card-content>
-</mat-card> -->
-<mat-card class="shipping-card">
+
+<mat-card class="shipping-card" *ngIf="anticipos.length > 0">
     <mat-card-header>
         <mat-card-title>
             Consultar anticipos

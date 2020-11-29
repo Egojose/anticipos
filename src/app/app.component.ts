@@ -14,8 +14,8 @@ export class AppComponent implements OnInit {
   title = 'anticipos-araujo';
   usuarioActual;
   pendientes = [];
-  firma;
-  firmaGerente;
+  firma: string;
+  firmaGerente: string;
   gerenteAdmin;
   errores = 0
   bloquearSolicitud: boolean;
@@ -34,7 +34,6 @@ export class AppComponent implements OnInit {
       });
   }) 
     this.ObtenerUsuarioActual();
-    // this.ObtenerAprobadores();
   };
 
   clickEvent(){
@@ -93,7 +92,6 @@ export class AppComponent implements OnInit {
       (respuesta) => {
         this.empresa = respuesta[0].Empresa
         if(respuesta[0].UrlFirma) this.firma = respuesta[0].UrlFirma.Url;
-        this.ObtenerAprobadores(respuesta[0].Empresa);
       }
     ).catch(
       (err) => {
@@ -105,44 +103,7 @@ export class AppComponent implements OnInit {
     )
   }
 
-  async ObtenerAprobadores(empresa) {
-    await this.Servicios.ConsultarAprobadores(empresa).then(
-      async (respuesta) => {
-        console.log(respuesta);
-        await this.ObtenerFirmaGerente(respuesta[0].GerenteAdministrativo.ID);
-        this.gerenteAdmin = {
-          Title: respuesta[0].GerenteAdministrativo.Title,
-          ID: respuesta[0].GerenteAdministrativo.ID,
-          EMail: respuesta[0].GerenteAdministrativo.EMail,
-          // Firma: this.firmaGerente,
-        }
-        console.log(this.gerenteAdmin);
-      }
-    ).catch(
-      (err) => {
-        this.mostrarError('No se pudo cargar el aprobador');
-        console.error(`Aprobador ${err}`);
-        this.errores++
-        this.spinner.hide();
-      }
-    )
-  }
-
-  async ObtenerFirmaGerente(id: number) {
-    await this.Servicios.ConsultarUsuarioEmpleados(id).then(
-      (respuesta) => {
-        if(respuesta[0].UrlFirma) this.firmaGerente = respuesta[0].UrlFirma.Url;
-        console.log(this.firmaGerente);
-      }
-    ).catch(
-      (err) => {
-        this.mostrarError('No se pudo cargar la información del gerente');
-        console.log(`Firma gerente ${err}`);
-        this.errores++
-        this.spinner.hide();
-      }
-    )
-  }
+  
 
   enviarDatos() {
     if(this.errores > 0) {
@@ -152,7 +113,6 @@ export class AppComponent implements OnInit {
     let datos = {
       pendientes: this.pendientes,
       noLegalizados: this.anticiposSinLegalizar,
-      gerente: this.gerenteAdmin,
       usuario: {
         Id: this.usuarioActual.Id,
         Title: this.usuarioActual.Title,

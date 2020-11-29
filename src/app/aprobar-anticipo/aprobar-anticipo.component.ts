@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router'
 import { IEmailProperties } from '@pnp/sp/sputilities';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-aprobar-anticipo',
@@ -19,6 +20,7 @@ export class AprobarAnticipoComponent implements OnInit {
   detalleAnticipo;
   detalleUnidades = [];
   aprobadores = [];
+  dataAprobadores = new MatTableDataSource(this.aprobadores)
   totalPesos: number;
   totalDolares: number;
   totalEuros: number;
@@ -33,10 +35,22 @@ export class AprobarAnticipoComponent implements OnInit {
   index: number;
   mostrarBtn = true;
   empresa: string;
+  firmaGerente: any;
+  FormaPago;
+  tipoSolicitud: string;
+  detalleCierre: boolean;
+  Entidad: string;
+  numeroTransaccion:string;
+  solicitante: string;
+  fechaEntrega: string;
+  Comentarios: string;
+  arrDetalleCierre = [];
+  urlSoporte: string;
+
 
   constructor(public Servicio: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService, public router: Router) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if(!sessionStorage.getItem('pendiente')) {
       this.router.navigate(['/']);
       return;
@@ -44,24 +58,79 @@ export class AprobarAnticipoComponent implements OnInit {
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     this.pendienteArr.push(this.pendiente.pendiente);
     this.usuario = this.pendiente.usuario;
-    this.empresa = this.usuario.Empresa;
+    this.empresa = this.pendienteArr[0].Empresa;
+    this.tipoSolicitud = this.pendienteArr[0].TipoSolicitud
+    this.arrDetalleCierre.push(JSON.parse(this.pendienteArr[0].DetalleCierre));
+    console.log(this.arrDetalleCierre[0]);
+    if (this.arrDetalleCierre[0] !== null) {
+      this.Entidad = this.arrDetalleCierre[0].entidad ? this.arrDetalleCierre[0].entidad : '';
+      this.numeroTransaccion = this.arrDetalleCierre[0].numero_transaccion ? this.arrDetalleCierre[0].numero_transaccion : '';
+      this.solicitante = this.arrDetalleCierre[0].solicitante ? this.arrDetalleCierre[0].solicitante : '';
+      this.fechaEntrega = this.arrDetalleCierre[0].fecha_entrega ? this.arrDetalleCierre[0].fecha_entrega : null;
+      this.urlSoporte = this.arrDetalleCierre[0].url_documento ? this.arrDetalleCierre[0].url_documento : '';
+      this.Comentarios = this.arrDetalleCierre[0].comentarios ? this.arrDetalleCierre[0].comentarios : '';
+    }
     console.log(this.empresa);
+    // this.empresa = this.usuario.Empresa;
+    console.log(this.empresa);
+    if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0) this.detalleCierre = true;
     if(this.pendiente.query) this.mostrarBtn = false;
-    this.pendiente.gerente ? this.gerente = this.pendiente.gerente : this.gerente = [];
+    // this.pendiente.gerente ? this.gerente = this.pendiente.gerente : this.gerente = [];
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     this.aprobadores = JSON.parse(this.pendienteArr[0].Aprobadores);
+    this.dataAprobadores.data = this.aprobadores;
     this.detalleUnidades = this.aprobadores.filter((x) => x.rol === 'Director unidad de negocio');
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
-    this.gerenteObj = {
-      Director: this.gerente[0],
-      aprobado: false,
-      fecha: '',
-      rol: 'Gerente administrativo y financiero',
-    };
-    this.pendienteArr[0].Estado === 'Por aprobar gerente administrativo' && this.aprobadores.push(this.gerenteObj);
+    
+    
     this.ConsultarTesorero();
+    await this.ObtenerAprobadores(this.empresa)
+  }
+
+  async ObtenerAprobadores(empresa: string) {
+    await this.Servicio.ConsultarAprobadores(empresa).then(
+      async (respuesta) => {
+        console.log(respuesta);
+        await this.ObtenerFirmaGerente(respuesta[0].GerenteAdministrativo.ID);
+        this.gerente = {
+          Title: respuesta[0].GerenteAdministrativo.Title,
+          ID: respuesta[0].GerenteAdministrativo.ID,
+          EMail: respuesta[0].GerenteAdministrativo.EMail,
+          // Firma: this.firmaGerente,
+        };
+        this.gerenteObj = {
+          Director: this.gerente,
+          aprobado: false,
+          fecha: '',
+          rol: 'Gerente administrativo y financiero',
+        };
+        this.pendienteArr[0].Estado === 'Por aprobar gerente administrativo' && this.aprobadores.push(this.gerenteObj);
+        console.log(this.gerente);
+      }
+    ).catch(
+      (err) => {
+        this.mostrarError('No se pudo cargar el aprobador');
+        console.error(`Aprobador ${err}`);
+        this.spinner.hide();
+      }
+    )
+  }
+
+  async ObtenerFirmaGerente(id: number) {
+    await this.Servicio.ConsultarUsuarioEmpleados(id).then(
+      (respuesta) => {
+        if(respuesta[0].UrlFirma) this.firmaGerente = respuesta[0].UrlFirma.Url;
+        console.log(this.firmaGerente);
+      }
+    ).catch(
+      (err) => {
+        this.mostrarError('No se pudo cargar la información del gerente');
+        console.log(`Firma gerente ${err}`);
+        this.spinner.hide();
+      }
+    )
   }
 
   ConsultarTesorero() {
@@ -106,6 +175,7 @@ export class AprobarAnticipoComponent implements OnInit {
     this.aprobadores[this.index].aprobado =  true;
     this.aprobadores[this.index].fecha = this.formatearFecha(new Date())
     this.aprobadores[this.index].Director.Firma = this.usuario.Firma;
+    this.dataAprobadores.data = this.aprobadores;
     this.responsable = this.aprobadores[this.index].Director;
     this.mostrarInformacion('Haga click en enviar para finalizar el proceso')
   }
@@ -123,7 +193,7 @@ export class AprobarAnticipoComponent implements OnInit {
     if(this.pendienteArr[0].Estado === 'Por aprobar gerente administrativo'){
       this.responsable = this.tesorero
       cuerpo = '<p>Hola</p>' + '<br>' +
-      'Al usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> se le ha aprobado un anticipo el cual requiere de su intervención' + '<br>' +
+      'Al usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> se le ha aprobado un '+this.tipoSolicitud+' el cual requiere de su intervención' + '<br>' +
       'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       emailResponsable = this.tesorero.EMail
       obj = {
@@ -136,7 +206,7 @@ export class AprobarAnticipoComponent implements OnInit {
     if(porAprobar.length > 0 && this.pendienteArr[0].Estado === 'Por aprobar') {
       this.responsable = porAprobar[0].Director;
       cuerpo = '<p>Hola</p>' + '<br>' +
-      'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
+      'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un '+this.tipoSolicitud+' el cual requiere de su aprobación' + '<br>' +
       'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       emailResponsable = this.responsable.EMail
       obj = {
@@ -145,9 +215,9 @@ export class AprobarAnticipoComponent implements OnInit {
       }
     }  
     if(porAprobar.length === 0 && this.pendienteArr[0].Estado === 'Por aprobar') {
-      this.responsable = this.gerente[0];
+      this.responsable = this.gerente;
       cuerpo = '<p>Hola</p>' + '<br>' +
-      'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un anticipo el cual requiere de su aprobación' + '<br>' +
+      'El usuario <b>' + this.pendienteArr[0].Solicitante.Title + '</b> ha solicitado un '+this.tipoSolicitud+' el cual requiere de su aprobación' + '<br>' +
       'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
       emailResponsable = this.responsable.EMail
       obj = {

@@ -56,3 +56,7 @@ table {
 .rojo {
     color: red;
 }
+
+p {
+    text-align: justify;
+}

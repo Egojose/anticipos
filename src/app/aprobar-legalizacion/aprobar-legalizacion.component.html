@@ -214,7 +214,7 @@
     </mat-card-header>
     <br>
     <mat-card-content>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col">
                 <mat-lablel>Total anticipo Pesos</mat-lablel>
                 <mat-form-field class="full-width">
@@ -234,8 +234,35 @@
                     <input matInput [(ngModel)]="totalEuros" currencyMask readonly class="total">
                 </mat-form-field>
             </div>
-        </div>
+        </div> -->
+
         <table mat-table [dataSource]="resumen" class="resumen">
+            <ng-container matColumnDef="Detalle">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Pesos">
+                <th mat-header-cell *matHeaderCellDef> Pesos </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'rojo': element.peso < 0}"> {{element.peso | currency}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="Dolares">
+                <th mat-header-cell *matHeaderCellDef> Dólares </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'rojo': element.dolar < 0}"> {{element.dolar | currency}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Euros">
+                <th mat-header-cell *matHeaderCellDef> Euros </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'rojo': element.euro < 0}"> {{element.euro | currency}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedResumen1"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedResumen1;"></tr>
+
+        </table>
+
+        <!-- <table mat-table [dataSource]="resumen" class="resumen">
             <ng-container matColumnDef="Detalle">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
@@ -264,7 +291,7 @@
               <tr mat-header-row *matHeaderRowDef="displayedResumen"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedResumen;"></tr>
 
-        </table>
+        </table> -->
         <br>
         <div class="row">
             <div class="col">
@@ -306,6 +333,75 @@
                 <a href="{{urlFacturas}}" target="_blank"><button type="button" class="btn btn-default">Ver facturas</button></a>
             </div>
         </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card" *ngIf="mostrarMovimiento">
+    <mat-card-header>
+        <mat-card-title>
+            Registrar movimiento de dinero
+        </mat-card-title>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-label style="vertical-align: middle; display: inline-block">Forma de pago</mat-label>
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="FormaPago">
+                    <mat-radio-button value="Transferencia">Transferencia</mat-radio-button>
+                    <mat-radio-button value="Efectivo">Efectivo</mat-radio-button>
+                    <mat-radio-button value="Cheque">Cheque</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Entidad" [(ngModel)]="Entidad">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Número de transacción" [(ngModel)]="numeroTransaccion">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Solicitante" [(ngModel)]="solicitante" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha de entrega</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaEntrega">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <!-- <span *ngIf="form.controls.fechaFinalizacion.value && form.controls.fechaFinalizacion.value !== ' '" style="color: red" class="alerta">
+                    Se deben legalizar los gastos de anticipos máximo 5 días hábilies después de esta fecha
+                </span> -->
+            </div>
+            <div class="col">
+                <label for="">Cargar soporte</label>
+                <input type="file" (change)="AdjuntarSoporte($event)">
+                <span *ngIf="alertarExtension"  style="color: red" class="alerta">
+                   formatos permitidos: jpg, pdf, eml, doc, docx
+                </span>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <textarea matInput rows="1" placeholder="Comentarios" [(ngModel)]="Comentarios"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+        <hr>
+        <!-- <div class="row">
+            <div class="col-6 offset-3">
+                <button type="button" class="btn btn-success btn-block" (click)="AgregarDetalle()">Guardar</button>
+            </div>
+        </div> -->
     </mat-card-content>
 </mat-card>
 <div class="row" *ngIf="mostrarElementos">

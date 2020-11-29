@@ -58,3 +58,7 @@ mat-card-header {
     background:#472973;
     color: white;
    }
+
+   p {
+       text-align: justify;
+   }
