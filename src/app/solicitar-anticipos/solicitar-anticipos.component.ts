@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ServiciosService } from '../servcios/servicios.service'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router'
@@ -41,6 +41,10 @@ export class SolicitarAnticiposComponent implements OnInit {
   bloquearSolicitud: boolean;
   mostrarTexto: boolean;
   tipoSolicitud: string;
+  textoAutorizacion: string;
+  @ViewChild('texto') texto: ElementRef
+ 
+  
 
   constructor(public Servicios: ServiciosService, public fb: FormBuilder, public router: Router, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
@@ -69,7 +73,8 @@ export class SolicitarAnticiposComponent implements OnInit {
       Moneda: [''],
       totalPesos: [''],
       totalDolares: [''],
-      totalEuros: ['']
+      totalEuros: [''],
+      
     })
     this.datosString = sessionStorage.getItem('datosUsuario');
     this.datosJson = JSON.parse(this.datosString);
@@ -137,7 +142,9 @@ export class SolicitarAnticiposComponent implements OnInit {
     await this.Servicios.ConsultarConsecutivo().then(
       (respuesta) => {
         this.consecutivos = respuesta;
+        this.textoAutorizacion = this.consecutivos[0].TextoAprobarDescuento
         console.log(this.consecutivos[0]);
+        console.log(this.textoAutorizacion);
       }
     )
   }
@@ -261,7 +268,7 @@ export class SolicitarAnticiposComponent implements OnInit {
       cantidad: parseInt(this.form.controls.Cantidad.value),
       valorUnitario: parseInt(this.form.controls.ValorUnitario.value),
       valorTotal: (this.form.controls.ValorUnitario.value * this.form.controls.Cantidad.value),
-      moneda: this.form.controls.Moneda.value
+      moneda: this.form.controls.Moneda.value,
     }
     this.detalleAnticipo.data.push(detalle);
     console.log(this.detalleAnticipo.data);
@@ -375,6 +382,7 @@ export class SolicitarAnticiposComponent implements OnInit {
     let FechaFinalizacion = this.form.controls.fechaFinalizacion.value;
     let FirmaSolicitante = this.datosJson.usuario.Firma
     this.tipoSolicitud = this.form.controls.TipoSolicitud.value;
+    let AutorizacionDescuento = this.textoAutorizacion;
 
     let obj = {
       Title,
@@ -391,7 +399,8 @@ export class SolicitarAnticiposComponent implements OnInit {
       TipoSolicitud,
       Aprobadores,
       FechaFinalizacion,
-      FirmaSolicitante
+      FirmaSolicitante,
+      AutorizacionDescuento
     }
 
     let objConsecutivo = {}
