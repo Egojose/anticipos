@@ -292,7 +292,7 @@
                   <div class="row">
                       <div class="col">
                         <mat-checkbox class="example-margin" (change)="AutorizarDescuento($event.checked)" ><span *ngIf="!mostrarTexto"><b>AUTORIZAR DESCUENTO</b></span></mat-checkbox>
-                        <p *ngIf="mostrarTexto"><b>AUTORIZACION DE DESCUENTO:</b>
+                        <p *ngIf="mostrarTexto" #texto><b>AUTORIZACION DE DESCUENTO:</b>
                             Si no he presentado la legalizacion del reporte de gastos
                             anexando los soportes de facturas, los tiquetes y la orden de alojamiento respectiva,
                             en la fecha establecida por tesorería, autorizo a 

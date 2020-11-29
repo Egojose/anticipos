@@ -309,9 +309,9 @@ export class AprobarLegalizacionComponent implements OnInit {
     if(this.pendienteArr[0].Estado === 'Por confirmar') {
       let DetalleCierre = '';
       if(this.mostrarMovimiento) {
-        
         this.validar(!this.Entidad || !this.numeroTransaccion || !this.solicitante 
           || !this.fechaEntrega || !this.Comentarios, 'Debe registrar todos los datos del movimiento de dinero') && counter++;
+        this.validar(!this.archivo, 'Debe adjuntar el soporte') && counter++;  
         if(counter > 0) {
           this.spinner.hide();
           return false;
