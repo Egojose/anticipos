@@ -262,6 +262,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.envairNotificacion(cuerpo, this.pendienteArr[0].Solicitante.EMail);
         this.mostrarInformacion('El estado se actualizó correctamente.');
         sessionStorage.clear();
+        this.spinner.hide();
         this.router.navigate(['/'])
       }
     ).catch(
@@ -269,6 +270,7 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.mostrarError('No se pudo actualizar el estado de la legalización. Intente más tarde');
         sessionStorage.clear();
         console.log(`rechazar ${err}`);
+        this.spinner.hide()
         setTimeout(() => {
           this.router.navigate(['/']);
         }, 3000);
