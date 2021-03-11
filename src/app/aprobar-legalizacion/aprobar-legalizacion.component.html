@@ -404,6 +404,51 @@
         </div> -->
     </mat-card-content>
 </mat-card>
+<mat-card class="shipping-card" *ngIf="detalleCierre">
+    <mat-card-header>
+        <mat-card-title>
+            Detalle cierre de solicitud
+        </mat-card-title>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Entidad" [(ngModel)]="Entidad" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Número de transacción" [(ngModel)]="numeroTransaccion" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Solicitante" [(ngModel)]="solicitante" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha de entrega</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaEntrega" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <textarea matInput rows="1" placeholder="Comentarios" [(ngModel)]="Comentarios" readonly></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <a href="{{urlSoporte}}" target="_blank"><button type="button" class="btn btn-default">Ver soporte</button></a>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
 <div class="row" *ngIf="mostrarElementos">
     <div class="col-6">
         <button type="button" class="btn btn-success btn-block" (click)="Aprobar()">Aprobar</button>

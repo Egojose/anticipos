@@ -57,6 +57,9 @@ export class LegalizarAnticipoComponent implements OnInit {
   mostrarTexto: boolean;
   tipoSolicitud: string;
   declaracion: string;
+
+ 
+
   //*******
 
   
@@ -80,6 +83,9 @@ export class LegalizarAnticipoComponent implements OnInit {
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
+
+    
+
     this.ObtenerTipoGasto();
     this.ConsultarContador();
     this.consultarDeclaracion();
