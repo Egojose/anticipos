@@ -124,7 +124,7 @@ export class AprobarLegalizacionComponent implements OnInit {
       this.urlSoporte = this.arrDetalleCierre[0].url_documento ? this.arrDetalleCierre[0].url_documento : '';
       this.Comentarios = this.arrDetalleCierre[0].comentarios ? this.arrDetalleCierre[0].comentarios : '';
     }
-
+ 
     if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0) this.detalleCierre = true;
 
 
