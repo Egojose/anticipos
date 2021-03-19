@@ -114,6 +114,8 @@ export class AprobarLegalizacionComponent implements OnInit {
     console.log('empieza el arreglo del detalle de cierre');
     console.log(this.pendienteArr[0].DetalleCierre);
 
+
+
     this.arrDetalleCierre.push(JSON.parse(this.pendienteArr[0].DetalleCierre));
     console.log(this.arrDetalleCierre[0]);
     if (this.arrDetalleCierre[0] !== null) {
@@ -125,8 +127,9 @@ export class AprobarLegalizacionComponent implements OnInit {
       this.Comentarios = this.arrDetalleCierre[0].comentarios ? this.arrDetalleCierre[0].comentarios : '';
     }
  
-    if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0) this.detalleCierre = true;
-
+    if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0 
+      && this.pendiente.pendiente.Estado === 'Aprobado' 
+      && this.urlSoporte !== '') this.detalleCierre = true;
 
     // let arrResumenSaldos = arrResumen.filter((x) => {
     //   return x.tipo === 'Saldo'
