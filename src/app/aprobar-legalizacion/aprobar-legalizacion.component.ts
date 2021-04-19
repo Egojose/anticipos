@@ -68,9 +68,6 @@ export class AprobarLegalizacionComponent implements OnInit {
   urlDocumento: string;
   tipoSolicitud: string;
 
-  tituloAnticipo: boolean = false;
-  tituloLegalizacion: boolean = true;
-
 
   detalleCierre: boolean;
   // Entidad: string;
