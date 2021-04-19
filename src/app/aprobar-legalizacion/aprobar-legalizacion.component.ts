@@ -68,6 +68,17 @@ export class AprobarLegalizacionComponent implements OnInit {
   urlDocumento: string;
   tipoSolicitud: string;
 
+
+  detalleCierre: boolean;
+  // Entidad: string;
+  // numeroTransaccion:string;
+  // solicitante: string;
+  // fechaEntrega: string;
+  // Comentarios: string;
+  arrDetalleCierre = [];
+  urlSoporte: string;
+
+
   constructor(public router: Router, public Servicio: ServiciosService, public toastr: ToastrService, public spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
@@ -99,6 +110,29 @@ export class AprobarLegalizacionComponent implements OnInit {
     let arrResumenGastos = arrResumen.filter((x) => {
       return x.tipo === 'Gastos'
     });
+
+    console.log('empieza el arreglo del detalle de cierre');
+    console.log(this.pendienteArr[0].DetalleCierre);
+
+
+
+    this.arrDetalleCierre.push(JSON.parse(this.pendienteArr[0].DetalleCierre));
+    console.log(this.arrDetalleCierre[0]);
+    if (this.arrDetalleCierre[0] !== null) {
+      this.Entidad = this.arrDetalleCierre[0].entidad ? this.arrDetalleCierre[0].entidad : '';
+      this.numeroTransaccion = this.arrDetalleCierre[0].numero_transaccion ? this.arrDetalleCierre[0].numero_transaccion : '';
+      this.solicitante = this.arrDetalleCierre[0].solicitante ? this.arrDetalleCierre[0].solicitante : '';
+      this.fechaEntrega = this.arrDetalleCierre[0].fecha_entrega ? this.arrDetalleCierre[0].fecha_entrega : null;
+      this.urlSoporte = this.arrDetalleCierre[0].url_documento ? this.arrDetalleCierre[0].url_documento : '';
+      this.Comentarios = this.arrDetalleCierre[0].comentarios ? this.arrDetalleCierre[0].comentarios : '';
+    }
+ 
+    if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0 
+      && this.pendiente.pendiente.Estado === 'Aprobado' 
+      && this.urlSoporte !== '') { 
+        this.detalleCierre = true;
+      } 
+
     // let arrResumenSaldos = arrResumen.filter((x) => {
     //   return x.tipo === 'Saldo'
     // })
@@ -144,6 +178,11 @@ export class AprobarLegalizacionComponent implements OnInit {
     }
     this.resumenCuentas.push(objSaldo)
     this.resumen.data = this.resumenCuentas;
+
+
+   
+
+
     this.ConsultarTesorero();
   }
 

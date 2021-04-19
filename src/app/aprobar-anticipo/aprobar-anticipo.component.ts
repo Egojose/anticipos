@@ -61,6 +61,9 @@ export class AprobarAnticipoComponent implements OnInit {
     this.empresa = this.pendienteArr[0].Empresa;
     this.tipoSolicitud = this.pendienteArr[0].TipoSolicitud
     this.arrDetalleCierre.push(JSON.parse(this.pendienteArr[0].DetalleCierre));
+    this.pendienteArr[0].detalleAnticipo
+
+
     console.log(this.arrDetalleCierre[0]);
     if (this.arrDetalleCierre[0] !== null) {
       this.Entidad = this.arrDetalleCierre[0].entidad ? this.arrDetalleCierre[0].entidad : '';
