@@ -46,6 +46,8 @@ export class AprobarAnticipoComponent implements OnInit {
   Comentarios: string;
   arrDetalleCierre = [];
   urlSoporte: string;
+  detalleDesembolso;
+  urlDesembolso: string;
 
 
   constructor(public Servicio: ServiciosService, public spinner: NgxSpinnerService, public toastr: ToastrService, public router: Router) { }
@@ -80,6 +82,8 @@ export class AprobarAnticipoComponent implements OnInit {
     if(this.pendiente.query) this.mostrarBtn = false;
     // this.pendiente.gerente ? this.gerente = this.pendiente.gerente : this.gerente = [];
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
+    this.detalleDesembolso = JSON.parse(this.pendiente.pendiente.DetalleDesembolso);
+    console.log(this.detalleDesembolso);
     this.aprobadores = JSON.parse(this.pendienteArr[0].Aprobadores);
     this.dataAprobadores.data = this.aprobadores;
     this.detalleUnidades = this.aprobadores.filter((x) => x.rol === 'Director unidad de negocio');
