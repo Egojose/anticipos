@@ -152,8 +152,7 @@
             <ng-container matColumnDef="Nombre">
                 <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
                 <mat-cell *matCellDef="let element" data-label="Nombre" style="white-space: normal; word-wrap: break-word;">
-                    <span><b>{{element.Director.Title}}</b></span><br>
-                    <span>{{element.fecha}}</span>
+                    <span><b>{{element.Director.Title}}</b></span><span>{{element.fecha}}</span>
                 </mat-cell>
             </ng-container>
           
@@ -186,6 +185,57 @@
                   <button type="button" class="btn btn-danger btn-block" (click)="cancelar()">Cancelar</button>
               </div>
           </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card" *ngIf="detalleDesembolso">
+    <mat-card-header>
+        <mat-card-title>
+            Detalle desembolso del anticipo
+        </mat-card-title>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Entidad" [(ngModel)]="detalleDesembolso[0].entidad" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Número de transacción" [(ngModel)]="detalleDesembolso[0].numeroTransaccion" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Forma de pago" [(ngModel)]="detalleDesembolso[0].formaPago" readonly>
+                </mat-form-field>
+            </div>
+
+            <!-- <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Solicitante" [(ngModel)]="detalleDesembolso[0].solicitante" readonly>
+                </mat-form-field>
+            </div> -->
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <mat-label>Fecha de entrega</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="detalleDesembolso[0].fechaEntrega" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <textarea matInput rows="1" placeholder="Comentarios" [(ngModel)]="detalleDesembolso[0].comentarios" readonly></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <a href="{{detalleDesembolso[0].urlSoporte}}" target="_blank"><button type="button" class="btn btn-default">Ver soporte</button></a>
+            </div>
+        </div>
     </mat-card-content>
 </mat-card>
 <mat-card class="shipping-card" *ngIf="detalleCierre">
