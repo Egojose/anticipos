@@ -129,7 +129,9 @@ export class AprobarLegalizacionComponent implements OnInit {
  
     if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0 
       && this.pendiente.pendiente.Estado === 'Aprobado' 
-      && this.urlSoporte !== '') this.detalleCierre = true;
+      && this.urlSoporte !== '') { 
+        this.detalleCierre = true;
+      } 
 
     // let arrResumenSaldos = arrResumen.filter((x) => {
     //   return x.tipo === 'Saldo'
