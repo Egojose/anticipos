@@ -24,9 +24,7 @@ export class MisPendientesComponent implements OnInit {
    this.pendientes = JSON.parse(this.misPendientes);
    this.pendientesJson = this.pendientes.pendientes
    this.usuario.push(this.pendientes.usuario);
-  //  this.gerente.push(this.pendientes.gerente);
-   console.log(this.pendientesJson);
-   console.log(this.usuario);
+  //  this.gerente.push(this.pendientes.gerente)
   }
 
   Navegar(element) {

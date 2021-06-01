@@ -66,11 +66,9 @@ export class EditarLegalizacionComponent implements OnInit {
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     // this.empresa = this.pendiente.usuario.Empresa;
-    console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
     this.empresa = this.pendienteArr[0].Empresa;
     this.tipoSolicitud = this.pendienteArr[0].TipoSolicitud;
-    console.log(this.pendienteArr);
     this.Observaciones = this.pendienteArr[0].ComentariosContador;
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
@@ -78,16 +76,12 @@ export class EditarLegalizacionComponent implements OnInit {
     if(arrDetalle[0].urlFacturas) this.urlFacturas = arrDetalle[0].urlFacturas;
     if(arrDetalle[0].idDocumento) this.idDocumento = arrDetalle[0].idDocumento;
     let arrResumen = arrDetalle[0].resumen;
-    console.log(arrResumen);
     arrResumen.forEach((x) => {
       this.resumenCuentas.push(x);
     })
-    console.log(arrDetalle);
-    console.log(arrDetalle[0])
     arrDetalle[0].detalle.forEach((x) => {
       this.detalleLegalizacion.push(x);
     })
-    console.log(this.detalleLegalizacion);
     if(arrDetalle[0].saldoAfavor.Peso) this.saldoPesosAfavor = arrDetalle[0].saldoAfavor.Peso;
     if(arrDetalle[0].saldoAfavor.Dolar) this.saldoDolarAfavor = arrDetalle[0].saldoAfavor.Dolar;
     if(arrDetalle[0].saldoAfavor.Euro) this.saldoEurosAfavor = arrDetalle[0].saldoAfavor.Euro;
@@ -113,7 +107,6 @@ export class EditarLegalizacionComponent implements OnInit {
     filterArr = arr.filter((x) => {
       return x.moneda === moneda
     })
-    console.log(filterArr);
     for (let i = 0; i < filterArr.length; i++) {
       let valor = filterArr[i].valorTotal
       suma = suma + valor
@@ -133,7 +126,6 @@ export class EditarLegalizacionComponent implements OnInit {
     this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.contador = respuesta[0].Contador;
-        console.log(this.contador)
       }
     )
   }
@@ -225,7 +217,6 @@ export class EditarLegalizacionComponent implements OnInit {
 
     this.resumenCuentas.push(gastos);
     this.resumenCuentas.push(saldo);
-    console.log(this.resumenCuentas);
     this.resumen.data = this.resumenCuentas;
     this.limpiarCampos();
     this.detalleItemsLegalizacion = {
@@ -252,10 +243,8 @@ export class EditarLegalizacionComponent implements OnInit {
   }
 
   Eliminar(index: number) {
-    console.log(index);
     let indexResumen: number;
     indexResumen = this.resumenCuentas.findIndex((x) => x.concepto === this.detalleLegalizacion[index].tipo)
-    console.log(indexResumen);
     this.resumenCuentas.splice(indexResumen, 2);
     this.detalleLegalizacion.splice(index, 1),
     this.detalle.data = this.detalleLegalizacion;
@@ -284,7 +273,6 @@ export class EditarLegalizacionComponent implements OnInit {
   }
 
   AdjuntarSoporte($event) {
-    console.log($event.target.files[0]);
     this.archivo = $event.target.files[0];
     this.nombreArchivo = $event.target.files[0].name;
     this.extensionArchivo = this.nombreArchivo.split('.')[1]
@@ -307,7 +295,6 @@ export class EditarLegalizacionComponent implements OnInit {
           this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
           this.detalleItemsLegalizacion.urlFacturas = this.urlDocumento;
           this.detalleItemsLegalizacion.idDocumento = item.ID
-          console.log(item)
         })
       }
     )

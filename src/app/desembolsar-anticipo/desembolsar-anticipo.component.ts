@@ -43,16 +43,13 @@ export class DesembolsarAnticipoComponent implements OnInit {
       return;
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
-    console.log(this.pendiente.pendiente)
     this.anticipo.push(this.pendiente.pendiente);
     this.detalleAnticipo = JSON.parse(this.anticipo[0].DetalleAnticipo)
     this.tipoSolicitud = this.anticipo[0].TipoSolicitud;
-    console.log(this.anticipo);
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
     this.solicitante = this.anticipo[0].Solicitante.Title
-    console.log(this.formatearFecha(new Date(this.anticipo[0].FechaFinalizacion)))
   }
 
   SumarTotales(arr, moneda: string) {
@@ -61,7 +58,6 @@ export class DesembolsarAnticipoComponent implements OnInit {
     filterArr = arr.filter((x) => {
       return x.moneda === moneda
     })
-    console.log(filterArr);
     for (let i = 0; i < filterArr.length; i++) {
       let valor = filterArr[i].valorTotal
       suma = suma + valor
@@ -86,7 +82,6 @@ export class DesembolsarAnticipoComponent implements OnInit {
 
 
   AdjuntarSoporte($event) {
-    console.log($event.target.files[0]);
     this.archivo = $event.target.files[0];
     this.nombreArchivo = $event.target.files[0].name;
     this.extensionArchivo = this.nombreArchivo.split('.')[1]
@@ -98,7 +93,6 @@ export class DesembolsarAnticipoComponent implements OnInit {
       && this.extensionArchivo !== 'jpg', 
       'El formato del archivo no es válido. Por favor revise'
       ) ? this.alertarExtension = true : this.alertarExtension = false;
-    console.log(this.extensionArchivo)
   }
 
   async GuardarArchivo() {
@@ -107,7 +101,6 @@ export class DesembolsarAnticipoComponent implements OnInit {
         await f.file.getItem().then(item => {
           let urlRaiz = environment.urlRaiz
           this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
-          console.log(item)
         })
       }
     )
@@ -152,7 +145,6 @@ export class DesembolsarAnticipoComponent implements OnInit {
       urlSoporte: this.urlDocumento,
       comentarios: this.Comentarios
     }
-    console.log(detalle);
     this.detalleDesembolso.push(detalle);
     let obj = {
       DetalleDesembolso: JSON.stringify(this.detalleDesembolso),

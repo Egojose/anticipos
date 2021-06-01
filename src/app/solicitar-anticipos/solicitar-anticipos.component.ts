@@ -78,9 +78,6 @@ export class SolicitarAnticiposComponent implements OnInit {
     })
     this.datosString = sessionStorage.getItem('datosUsuario');
     this.datosJson = JSON.parse(this.datosString);
-    console.log(this.datosJson);
-    console.log(this.datosJson.usuario);
-    console.log(this.datosJson.noLegalizados);
     if(this.datosJson.noLegalizados && this.datosJson.noLegalizados.length >= 2) this.bloquearSolicitud = true;
     this.usuarioActual = this.datosJson.usuario;
     await this.ObtenerConsecutivo();
@@ -88,7 +85,6 @@ export class SolicitarAnticiposComponent implements OnInit {
     this.ObtenerUnidadNegocios();
     this.ObtenerTipoGasto();
     this.ObtenerClientes();
-    console.log(this.fecha)
     this.form.controls.Fecha.setValue(this.formatearFecha(this.fecha))
   }
 
@@ -108,7 +104,6 @@ export class SolicitarAnticiposComponent implements OnInit {
         this.empresa = this.Empresas.filter((x) => x.RazonSocial === this.datosJson.usuario.Empresa)
         // this.form.controls.Empresa.setValue(this.empresa[0].RazonSocial)
         // await this.AsignarConsecutivo(this.empresa[0].RazonSocial)
-        console.log(this.empresa);
       }
     )
   }
@@ -133,7 +128,6 @@ export class SolicitarAnticiposComponent implements OnInit {
     this.Servicios.ConsultarClientes().then(
       (respuesta) => {
         this.clientes = respuesta;
-        console.log(this.clientes)
       }
     )
   }
@@ -143,14 +137,11 @@ export class SolicitarAnticiposComponent implements OnInit {
       (respuesta) => {
         this.consecutivos = respuesta;
         this.textoAutorizacion = this.consecutivos[0].TextoAprobarDescuento
-        console.log(this.consecutivos[0]);
-        console.log(this.textoAutorizacion);
       }
     )
   }
 
   AsignarConsecutivo($event) {
-    console.log($event);
     if($event === 'Araujo Ibarra Consultores Internacionales S.A.S') this.consecutivo = this.consecutivos[0].ConsecutivoConsultores;
     if($event === 'Araujo Ibarra & Asociados S.A.')this.consecutivo = this.consecutivos[0].ConsecutivoAsociados;
     this.form.controls.Consecutivo.setValue(this.consecutivo);
@@ -230,7 +221,6 @@ export class SolicitarAnticiposComponent implements OnInit {
     this.usuariosAprobadores.push(aprobador);
     this.participacion.data = this.usuariosAprobadores;
     this.usuariosAprobadores.forEach((el) => {
-      console.log(el.Porcentaje)
       suma = suma + el.Porcentaje
       if(suma > 100) {
         this.mostrarAdvertencia('El porcentaje de los aprobadores no debe ser mayor a 100');
@@ -271,7 +261,6 @@ export class SolicitarAnticiposComponent implements OnInit {
       moneda: this.form.controls.Moneda.value,
     }
     this.detalleAnticipo.data.push(detalle);
-    console.log(this.detalleAnticipo.data);
     this.detalleAnticipo.data = this.detalleAnticipo.data;
     let pesos = this.SumarTotales(this.detalleAnticipo.data, 'Peso');
     let dolar = this.SumarTotales(this.detalleAnticipo.data, 'Dolar');
@@ -311,13 +300,11 @@ export class SolicitarAnticiposComponent implements OnInit {
        suma = suma + (+el.Porcentaje);
     })
     this.sumaTotal = suma;
-    console.log(this.sumaTotal);
   }
   
   EliminarDetalle(index: number) {
     this.detalleAnticipo.data.splice(index, 1);
     this.detalleAnticipo.data = this.detalleAnticipo.data;
-    console.log(this.detalleAnticipo.data);
     let pesos = this.SumarTotales(this.detalleAnticipo.data, 'Peso');
     let dolar = this.SumarTotales(this.detalleAnticipo.data, 'Dolar');
     let euro = this.SumarTotales(this.detalleAnticipo.data, 'Euro');

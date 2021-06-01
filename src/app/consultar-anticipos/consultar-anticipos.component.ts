@@ -63,8 +63,6 @@ export class ConsultarAnticiposComponent implements OnInit {
     }
     this.datos = JSON.parse(sessionStorage.getItem('datosUsuario'));
     this.usuario = this.datos.usuario
-    console.log(this.datos);
-    console.log(this.usuario);
     this.ConsultarEmpleados();
     this.ConsultarAnticipos();
   }
@@ -73,7 +71,6 @@ export class ConsultarAnticiposComponent implements OnInit {
     this.Servicios.ConsultarEmpleados().then(
       (respuesta) => {
         this.solicitantes = respuesta;
-        console.log(this.solicitantes);
       }
     )
   }
@@ -111,7 +108,6 @@ export class ConsultarAnticiposComponent implements OnInit {
     this.Servicios.ConsultarTodosAnticipos().then(
       (respuesta) => {
         this.anticipos = respuesta;
-        console.log(this.anticipos);
       }
     )
   }
@@ -122,7 +118,6 @@ export class ConsultarAnticiposComponent implements OnInit {
     filterArr = arr.filter((x) => {
       return x.moneda === moneda
     })
-    console.log(filterArr);
     for (let i = 0; i < filterArr.length; i++) {
       let valor = filterArr[i].valorTotal
       suma = suma + valor
@@ -142,22 +137,14 @@ export class ConsultarAnticiposComponent implements OnInit {
   ConstruirArrayDatos(id: number) {
     this.spinner.show();
     this.dataInicial = this.anticipos.filter((x) => x.Id === id)
-    console.log(this.dataInicial)
     this.data = JSON.parse(this.dataInicial[0].DetalleLegalizacion)
-    console.log(this.data);
     this.arrayDetalle = this.data[0].detalle;
     this.arrayLegalizacion = this.data[0].resumen;
     let arraySaldoAfavor = this.data[0].saldoAfavor
-    console.log(arraySaldoAfavor)
     this.arrayAprobadores = JSON.parse(this.dataInicial[0].Aprobadores);
     this.arrayDetalleAnticipo = JSON.parse(this.dataInicial[0].DetalleAnticipo)
-    console.log(this.arrayAprobadores)
-    console.log(this.arrayDetalleAnticipo);
-    console.log(this.arrayLegalizacion);
     let arrGastos = this.arrayLegalizacion.filter((x) => x.tipo === 'Gastos');
     let arrSaldos = this.arrayLegalizacion.filter((x) => x.tipo === 'Saldo');
-    console.log(arrGastos);
-    console.log(arrSaldos);
     this.reembolsable = this.dataInicial[0].Reembolsable === true ? 'Sí': 'No';
     //totales anticipo
     this.totalAnticipoPesos = this.SumarTotales(this.arrayDetalleAnticipo, 'Peso')
@@ -198,7 +185,6 @@ export class ConsultarAnticiposComponent implements OnInit {
       str = `${data[i].Director.Title} (${data[i].Porcentaje} %)`
       array.push(str);
     }
-    console.log(array.toString())
     return array.toString().replace(',', ', ');
   }
 
@@ -207,7 +193,6 @@ export class ConsultarAnticiposComponent implements OnInit {
     let firmaDirector = await new Img(this.arrayAprobadores[0].Director.Firma).width(250).margin([0, 0, 0, 0]).build();
     let logo = await new Img('../assets/images/logoAraujo.png').width(200).margin([0, 0, 0, 0]).build();
     let version = '1.0'
-    console.log(2)
     const pdf = new PdfMakeWrapper();
     pdf.add(
       new Table([

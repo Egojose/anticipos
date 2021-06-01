@@ -87,15 +87,12 @@ export class AprobarLegalizacionComponent implements OnInit {
       return;
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
-    console.log(this.pendiente);
     this.usuario = this.pendiente.usuario;
     this.empresa = this.pendiente.pendiente.Empresa;
     this.solicitante = this.pendiente.pendiente.Solicitante.Title
     this.tipoSolicitud = this.pendiente.pendiente.TipoSolicitud
-    console.log(this.empresa);
     this.pendienteArr.push(this.pendiente.pendiente);
     this.Observaciones = this.pendienteArr[0].ComentariosContador
-    console.log(this.pendienteArr);
     if(this.pendiente.query) this.mostrarElementos = false;
     if(this.pendienteArr[0].Estado === 'Por confirmar') {
       this.mostrarBtnConfirmar = true;
@@ -105,19 +102,12 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     let arrDetalle = JSON.parse(this.pendienteArr[0].DetalleLegalizacion);
     if(arrDetalle[0].urlFacturas) this.urlFacturas = arrDetalle[0].urlFacturas
-    console.log(arrDetalle);
     let arrResumen = arrDetalle[0].resumen;
     let arrResumenGastos = arrResumen.filter((x) => {
       return x.tipo === 'Gastos'
     });
 
-    console.log('empieza el arreglo del detalle de cierre');
-    console.log(this.pendienteArr[0].DetalleCierre);
-
-
-
     this.arrDetalleCierre.push(JSON.parse(this.pendienteArr[0].DetalleCierre));
-    console.log(this.arrDetalleCierre[0]);
     if (this.arrDetalleCierre[0] !== null) {
       this.Entidad = this.arrDetalleCierre[0].entidad ? this.arrDetalleCierre[0].entidad : '';
       this.numeroTransaccion = this.arrDetalleCierre[0].numero_transaccion ? this.arrDetalleCierre[0].numero_transaccion : '';
@@ -133,14 +123,10 @@ export class AprobarLegalizacionComponent implements OnInit {
         this.detalleCierre = true;
       } 
 
-    // let arrResumenSaldos = arrResumen.filter((x) => {
-    //   return x.tipo === 'Saldo'
-    // })
-    
     arrDetalle[0].detalle.forEach((x) => {
       this.detalleLegalizacion.push(x);
     })
-    console.log(this.detalleLegalizacion);
+  
     if(arrDetalle[0].saldoAfavor.Peso) this.saldoPesosAfavor = arrDetalle[0].saldoAfavor.Peso;
     if(arrDetalle[0].saldoAfavor.Dolar) this.saldoDolarAfavor = arrDetalle[0].saldoAfavor.Dolar;
     if(arrDetalle[0].saldoAfavor.Euro) this.saldoEurosAfavor = arrDetalle[0].saldoAfavor.Euro;
@@ -190,7 +176,6 @@ export class AprobarLegalizacionComponent implements OnInit {
     this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.tesorero = respuesta[0].Tesorero;
-        console.log(this.tesorero)
       }
     )
   }
@@ -225,7 +210,6 @@ export class AprobarLegalizacionComponent implements OnInit {
     filterArr = arr.filter((x) => {
       return x.moneda === moneda
     })
-    console.log(filterArr);
     for (let i = 0; i < filterArr.length; i++) {
       let valor = filterArr[i].valorTotal
       suma = suma + valor
@@ -234,7 +218,6 @@ export class AprobarLegalizacionComponent implements OnInit {
   }
 
   AdjuntarSoporte($event) {
-    console.log($event.target.files[0]);
     this.archivo = $event.target.files[0];
     this.nombreArchivo = $event.target.files[0].name;
     this.extensionArchivo = this.nombreArchivo.split('.')[1]
@@ -246,7 +229,6 @@ export class AprobarLegalizacionComponent implements OnInit {
       && this.extensionArchivo !== 'jpg', 
       'El formato del archivo no es válido. Por favor revise'
       ) ? this.alertarExtension = true : this.alertarExtension = false;
-    console.log(this.extensionArchivo)
   }
 
   async GuardarArchivo() {
@@ -255,7 +237,6 @@ export class AprobarLegalizacionComponent implements OnInit {
         await f.file.getItem().then(item => {
           let urlRaiz = environment.urlRaiz
           this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
-          console.log(item)
         })
       }
     )

@@ -31,7 +31,6 @@ export class MisSolicitudesComponent implements OnInit {
       return;
     }
     this.pendientes = JSON.parse(sessionStorage.getItem('datosUsuario'))
-    console.log(this.pendientes)
     this.idUsuario = this.pendientes.usuario.Id
     await this.ConsultarAnticiposNoLegalizados()
   }
@@ -71,7 +70,6 @@ export class MisSolicitudesComponent implements OnInit {
     'El usuario <b>' + this.anticipos[0].Solicitante.Title + '</b> ha Reactivado el anticipo' + this.consecutivo + ' el cual requiere de su intervención' + '<br>' +
     'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
     let elements = JSON.parse(this.solicitud.EstadoActual);
-    console.log(elements)
     let idResponsable = elements.responsable;
     let estado = elements.estado;
     let id = this.solicitud.Id;
@@ -87,7 +85,6 @@ export class MisSolicitudesComponent implements OnInit {
     this.cuerpo = '<p>Hola</p>' + '<br>' +
     'El usuario <b>' + this.anticipos[0].Solicitante.Title + '</b> ha pausado el anticipo' + this.consecutivo + ' una vez que se reactive se le notificará' + '<br>' +
     'Para ver sus actividades pendientes haga click <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/aplicacionesPruebas/Anticipos/index.aspx/mis-pendientes">aquí</a>'
-    console.log(this.solicitud)
     let estado = 'Pausado';
     let id = this.solicitud.Id;
     let idResponsable = this.idUsuario;
@@ -98,7 +95,6 @@ export class MisSolicitudesComponent implements OnInit {
       responsable: this.solicitud.ResponsableId,
       email: this.emailResponsable
     }
-    console.log(this.solicitud)
     await this.ActualizarSolicitud(id, estado, idResponsable, JSON.stringify(estadoActual, null, 2), pausado, cancelado);
     this.modalRef.hide();
     this.router.navigate(['/'])

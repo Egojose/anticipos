@@ -72,14 +72,11 @@ export class LegalizarAnticipoComponent implements OnInit {
     }
     this.pendiente = JSON.parse(sessionStorage.getItem('pendiente'));
     // this.empresa = this.pendiente.usuario.Empresa
-    console.log(this.pendiente);
     this.pendienteArr.push(this.pendiente.pendiente);
     this.empresa = this.pendienteArr[0].Empresa
     this.tipoSolicitud = this.pendienteArr[0].TipoSolicitud;
-    console.log(this.pendienteArr);
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     this.detalleUnidades = JSON.parse(this.pendienteArr[0].Aprobadores).filter((x) => x.rol === 'Director unidad de negocio');
-    console.log(this.pendienteArr);
     this.totalPesos = this.SumarTotales(this.detalleAnticipo, 'Peso');
     this.totalDolares = this.SumarTotales(this.detalleAnticipo, 'Dolar');
     this.totalEuros = this.SumarTotales(this.detalleAnticipo, 'Euro');
@@ -97,7 +94,6 @@ export class LegalizarAnticipoComponent implements OnInit {
     filterArr = arr.filter((x) => {
       return x.moneda === moneda
     })
-    console.log(filterArr);
     for (let i = 0; i < filterArr.length; i++) {
       let valor = filterArr[i].valorTotal
       suma = suma + valor
@@ -117,7 +113,6 @@ export class LegalizarAnticipoComponent implements OnInit {
     this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.contador = respuesta[0].Contador;
-        console.log(this.contador)
       }
     )
   }
@@ -219,7 +214,6 @@ export class LegalizarAnticipoComponent implements OnInit {
 
     this.resumenCuentas.push(gastos);
     this.resumenCuentas.push(saldo);
-    console.log(this.resumenCuentas);
     this.resumen.data = this.resumenCuentas;
     this.limpiarCampos();
     this.detalleItemsLegalizacion = {
@@ -246,10 +240,8 @@ export class LegalizarAnticipoComponent implements OnInit {
   }
 
   Eliminar(index: number) {
-    console.log(index);
     let indexResumen: number;
     indexResumen = this.resumenCuentas.findIndex((x) => x.concepto === this.detalleLegalizacion[index].tipo)
-    console.log(indexResumen);
     this.resumenCuentas.splice(indexResumen, 2);
     this.detalleLegalizacion.splice(index, 1),
     this.detalle.data = this.detalleLegalizacion;
@@ -278,7 +270,6 @@ export class LegalizarAnticipoComponent implements OnInit {
   }
 
   AdjuntarSoporte($event) {
-    console.log($event.target.files[0]);
     this.archivo = $event.target.files[0];
     this.nombreArchivo = $event.target.files[0].name;
     this.extensionArchivo = this.nombreArchivo.split('.')[1]
@@ -296,7 +287,6 @@ export class LegalizarAnticipoComponent implements OnInit {
     await this.Servicio.AgregarDocumentos(this.biblioteca, this.GenerarIdentificador() + '--' + this.nombreArchivo, this.archivo).then(
       async f => {
         await f.file.getItem().then(item => {
-          console.log(item)
           let urlRaiz = environment.urlRaiz
           this.urlDocumento = urlRaiz + f.data.ServerRelativeUrl;
           this.detalleItemsLegalizacion.urlFacturas = this.urlDocumento

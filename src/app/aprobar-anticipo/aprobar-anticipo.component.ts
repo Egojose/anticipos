@@ -65,8 +65,6 @@ export class AprobarAnticipoComponent implements OnInit {
     this.arrDetalleCierre.push(JSON.parse(this.pendienteArr[0].DetalleCierre));
     this.pendienteArr[0].detalleAnticipo
 
-
-    console.log(this.arrDetalleCierre[0]);
     if (this.arrDetalleCierre[0] !== null) {
       this.Entidad = this.arrDetalleCierre[0].entidad ? this.arrDetalleCierre[0].entidad : '';
       this.numeroTransaccion = this.arrDetalleCierre[0].numero_transaccion ? this.arrDetalleCierre[0].numero_transaccion : '';
@@ -75,15 +73,13 @@ export class AprobarAnticipoComponent implements OnInit {
       this.urlSoporte = this.arrDetalleCierre[0].url_documento ? this.arrDetalleCierre[0].url_documento : '';
       this.Comentarios = this.arrDetalleCierre[0].comentarios ? this.arrDetalleCierre[0].comentarios : '';
     }
-    console.log(this.empresa);
+   
     // this.empresa = this.usuario.Empresa;
-    console.log(this.empresa);
     if(this.pendienteArr[0].DetalleCierre && this.pendienteArr[0].DetalleCierre.length > 0) this.detalleCierre = true;
     if(this.pendiente.query) this.mostrarBtn = false;
     // this.pendiente.gerente ? this.gerente = this.pendiente.gerente : this.gerente = [];
     this.detalleAnticipo = JSON.parse(this.pendiente.pendiente.DetalleAnticipo);
     this.detalleDesembolso = JSON.parse(this.pendiente.pendiente.DetalleDesembolso);
-    console.log(this.detalleDesembolso);
     this.aprobadores = JSON.parse(this.pendienteArr[0].Aprobadores);
     this.dataAprobadores.data = this.aprobadores;
     this.detalleUnidades = this.aprobadores.filter((x) => x.rol === 'Director unidad de negocio');
@@ -99,7 +95,6 @@ export class AprobarAnticipoComponent implements OnInit {
   async ObtenerAprobadores(empresa: string) {
     await this.Servicio.ConsultarAprobadores(empresa).then(
       async (respuesta) => {
-        console.log(respuesta);
         await this.ObtenerFirmaGerente(respuesta[0].GerenteAdministrativo.ID);
         this.gerente = {
           Title: respuesta[0].GerenteAdministrativo.Title,
@@ -114,7 +109,6 @@ export class AprobarAnticipoComponent implements OnInit {
           rol: 'Gerente administrativo y financiero',
         };
         this.pendienteArr[0].Estado === 'Por aprobar gerente administrativo' && this.aprobadores.push(this.gerenteObj);
-        console.log(this.gerente);
       }
     ).catch(
       (err) => {
@@ -129,7 +123,6 @@ export class AprobarAnticipoComponent implements OnInit {
     await this.Servicio.ConsultarUsuarioEmpleados(id).then(
       (respuesta) => {
         if(respuesta[0].UrlFirma) this.firmaGerente = respuesta[0].UrlFirma.Url;
-        console.log(this.firmaGerente);
       }
     ).catch(
       (err) => {
@@ -144,7 +137,6 @@ export class AprobarAnticipoComponent implements OnInit {
     this.Servicio.ConsultarAprobadores(this.empresa).then(
       (respuesta) => {
         this.tesorero = respuesta[0].Tesorero;
-        console.log(this.tesorero)
       }
     )
   }
@@ -164,7 +156,6 @@ export class AprobarAnticipoComponent implements OnInit {
     filterArr = arr.filter((x) => {
       return x.moneda === moneda
     })
-    console.log(filterArr);
     for (let i = 0; i < filterArr.length; i++) {
       let valor = filterArr[i].valorTotal
       suma = suma + valor
@@ -174,11 +165,7 @@ export class AprobarAnticipoComponent implements OnInit {
 
   Aprobar() {
     this.ocultarBtn = true;
-    console.log(this.aprobadores[0]);
-    console.log(this.usuario);
-    console.log(this.gerente);
     this.index = this.aprobadores.findIndex((x) => x.aprobado === false);
-    console.log(this.index);
     this.aprobadores[this.index].aprobado =  true;
     this.aprobadores[this.index].fecha = this.formatearFecha(new Date())
     this.aprobadores[this.index].Director.Firma = this.usuario.Firma;

@@ -45,7 +45,6 @@ export class AppComponent implements OnInit {
     this.Servicios.ObtenerUsuarioActual().then(
       async (respuesta) => {
         this.usuarioActual = respuesta;
-        console.log(this.usuarioActual);
         this.nombreUsuario = respuesta.Title;
         await this.ObtnenerAnticiposPendientes();
         await this.ObtenerAnticiposSinLegalizar();
@@ -66,7 +65,6 @@ export class AppComponent implements OnInit {
     await this.Servicios.ConsultarPendientes(this.usuarioActual.Id).then(
       (respuesta) => {
         this.pendientes = respuesta;
-        console.log(this.pendientes)
         if(this.pendientes.length >= 2) this.bloquearSolicitud = true;
       }
     ).catch(
